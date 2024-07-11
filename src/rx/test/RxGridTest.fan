@@ -28,15 +28,24 @@
     ])
     verifyEq(g.isEmpty, false)
     verifyEq(g.size, 3)
+    verifyRec(g[0], ["a":12, "b":"foo", "c":false])
+    verifyRec(g[1], ["a":24, "b":"bar", "c":true])
+    verifyRec(g[2], ["a":18, "b":"zar", "c":false])
+
+    // out of bounds
+    verifyErr(IndexErr#) { x := g[4] }
+    verifyErr(IndexErr#) { x := g[-5] }
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Support
 //////////////////////////////////////////////////////////////////////////
 
-  // private Void verifyRec(RxRec rec, Str:Obj? expect)
-  // {
-  //   test := Str?:Obj[:}
-  //   rec.each
-  // }
+  private Void verifyRec(RxRec rec, Str:Obj? expect)
+  {
+    dumb := Str:Obj?[:].setAll(expect)
+    test := Str:Obj?[:]
+    rec.each |v,k| { test[k] = v }
+    verifyEq(test, dumb)
+  }
 }

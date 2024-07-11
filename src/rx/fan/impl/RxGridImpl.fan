@@ -29,18 +29,18 @@
   // ** Metadata for this grid.
   // abstract Str:Obj? meta()
 
-  ** Iterate each record in this grid.
-  override Void eachRec(|RxRec rec, Int index| f)
-  {
-    recs.each |r,i| { f(r,i) }
-  }
-
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
   @Operator
   override Obj? get(Int index)
   {
     recs[index]
+  }
+
+  ** Iterate each record in this grid.
+  override Void each(|RxRec rec, Int index| f)
+  {
+    recs.each |r,i| { f(r,i) }
   }
 
   private const RxRec[] recs
