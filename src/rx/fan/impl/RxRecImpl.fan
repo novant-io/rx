@@ -17,9 +17,9 @@
   new make(Str:Obj? map := [:]) { this.map = map }
 
   ** Iterate the keys in this record.
-  override Void eachKey(|Str key| f)
+  override Void eachKey(|Str key, Int index| f)
   {
-    map.keys.each |k| { f(k) }
+    map.keys.each |k,i| { f(k,i) }
   }
 
   ** Get the value for the given `key` or 'null' if not found.

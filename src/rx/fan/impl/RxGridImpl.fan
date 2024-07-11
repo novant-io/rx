@@ -7,27 +7,41 @@
 //
 
 *************************************************************************
-** RxGrid
+** RxGridImpl
 *************************************************************************
 
-** RxGrid models a grid of RxRec records.
-@Js const mixin RxGrid
+** Default RxGrid implmentation.
+@Js internal const class RxGridImpl : RxGrid
 {
+  ** Constructor.
+  new make(RxRec[] recs := RxRec#.emptyList)
+  {
+    this.recs = recs
+  }
+
   ** Convenience for `size == 0`
-  abstract Bool isEmpty()
+  override Bool isEmpty() { recs.isEmpty }
 
   ** Return number of records in this grid.
-  abstract Int size()
+  override Int size() { recs.size }
 
   // TODO
   // ** Metadata for this grid.
   // abstract Str:Obj? meta()
 
   ** Iterate each record in this grid.
-  abstract Void eachRec(|RxRec rec, Int index| f)
+  override Void eachRec(|RxRec rec, Int index| f)
+  {
+    recs.each |r,i| { f(r,i) }
+  }
 
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
   @Operator
-  abstract Obj? get(Int index)
+  override Obj? get(Int index)
+  {
+    recs[index]
+  }
+
+  private const RxRec[] recs
 }

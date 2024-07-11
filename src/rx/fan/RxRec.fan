@@ -14,7 +14,7 @@
 @Js const mixin RxRec
 {
   ** Iterate the keys in this record.
-  abstract Void eachKey(|Str key| f)
+  abstract Void eachKey(|Str key, Int index| f)
 
   ** Get the value for the given `key` or 'null' if not found.
   @Operator
