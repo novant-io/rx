@@ -13,6 +13,10 @@
 ** RxRec models a record.
 @Js const mixin RxRec
 {
+  ** Convenience for 'rec->id' to get the unique ID
+  ** for this record within the dataset.
+  abstract Int id()
+
   ** Get the value for the given `key` or 'null' if not found.
   @Operator
   abstract Obj? get(Str key)

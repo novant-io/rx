@@ -14,19 +14,26 @@
 @Js internal const class RxRecImpl : RxRec
 {
   ** Constructor.
-  new make(Str:Obj? map := [:]) { this.map = map }
-
-  ** Iterate the keys in this record.
-  override Void each(|Obj? val, Str key| f)
+  new make(Str:Obj? map := [:])
   {
-    map.each |v,k| { f(v,k) }
+    this.map = map
+    this.id  = map["id"] ?: throw ArgErr("Missing 'id' key")
   }
+
+  ** Unique ID for this record within the dataset.
+  override const Int id
 
   ** Get the value for the given `key` or 'null' if not found.
   @Operator
   override Obj? get(Str key)
   {
     map[key]
+  }
+
+  ** Iterate the keys in this record.
+  override Void each(|Obj? val, Str key| f)
+  {
+    map.each |v,k| { f(v,k) }
   }
 
   private const Str:Obj? map
