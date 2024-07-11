@@ -37,7 +37,7 @@
   private Str[] keys(RxRec rec)
   {
     acc := Str[,]
-    rec.eachKey |k| { acc.add(k) }
+    rec.each |v,k| { acc.add(k) }
     return acc
   }
 }
