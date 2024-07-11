@@ -10,10 +10,34 @@
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Basics
+// Impl
 //////////////////////////////////////////////////////////////////////////
 
-  Void testBasics()
+  Void testImpl()
   {
+    // empty rec
+    r := RxRecImpl()
+    verifyEq(keys(r).size, 0)
+    r = RxRecImpl([:])
+    verifyEq(keys(r).size, 0)
+
+    // simple
+    r = RxRecImpl(["a":12, "b":"foo", "c":false])
+    verifyEq(keys(r).size, 3)
+    verifyEq(keys(r), ["a","b","c"])
+    verifyEq(r.get("a"), 12)
+    verifyEq(r.get("b"), "foo")
+    verifyEq(r.get("c"), false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Support
+//////////////////////////////////////////////////////////////////////////
+
+  private Str[] keys(RxRec rec)
+  {
+    acc := Str[,]
+    rec.eachKey |k| { acc.add(k) }
+    return acc
   }
 }
