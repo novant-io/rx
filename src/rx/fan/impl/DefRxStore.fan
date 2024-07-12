@@ -13,7 +13,7 @@ using concurrent
 *************************************************************************
 
 ** Default RxStore implmentation.
-@Js internal const class RxStoreImpl : RxStore
+@Js internal const class DefRxStore : RxStore
 {
   ** Regster a new grid for this store.
   override Void register(Str key, RxGrid grid)

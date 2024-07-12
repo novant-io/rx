@@ -16,15 +16,15 @@
   Void testImpl()
   {
     // empty rec
-    g := RxGridImpl()
+    g := DefRxGrid()
     verifyEq(g.isEmpty, true)
     verifyEq(g.size, 0)
 
     // simple
-    g = RxGridImpl([
-      RxRecImpl(["id":1, "a":12, "b":"foo", "c":false]),
-      RxRecImpl(["id":2, "a":24, "b":"bar", "c":true]),
-      RxRecImpl(["id":3, "a":18, "b":"zar", "c":false]),
+    g = DefRxGrid([
+      DefRxRec(["id":1, "a":12, "b":"foo", "c":false]),
+      DefRxRec(["id":2, "a":24, "b":"bar", "c":true]),
+      DefRxRec(["id":3, "a":18, "b":"zar", "c":false]),
     ])
     verifyGrid(g, [
       ["id":1, "a":12, "b":"foo", "c":false],

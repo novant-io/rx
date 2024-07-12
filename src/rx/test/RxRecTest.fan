@@ -15,7 +15,7 @@
 
   Void testImpl()
   {
-    r := RxRecImpl(["id":1, "a":12, "b":"foo", "c":false])
+    r := DefRxRec(["id":1, "a":12, "b":"foo", "c":false])
     verifyEq(keys(r).size, 4)
     verifyEq(keys(r), ["id", "a","b","c"])
     // get

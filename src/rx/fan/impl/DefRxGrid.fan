@@ -7,11 +7,11 @@
 //
 
 *************************************************************************
-** RxGridImpl
+** DefRxGrid
 *************************************************************************
 
 ** Default RxGrid implmentation.
-@Js internal const class RxGridImpl : RxGrid
+@Js internal const class DefRxGrid : RxGrid
 {
   ** Constructor.
   new make(RxRec[] recs := RxRec#.emptyList)

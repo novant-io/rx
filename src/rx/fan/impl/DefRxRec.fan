@@ -7,11 +7,11 @@
 //
 
 *************************************************************************
-** RxRecImpl
+** DefRxRec
 *************************************************************************
 
 ** Default RxRec implmentation.
-@Js internal const class RxRecImpl : RxRec
+@Js internal const class DefRxRec : RxRec
 {
   ** Constructor.
   new make(Str:Obj? map := [:])
