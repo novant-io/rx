@@ -20,4 +20,11 @@
     rec.each |v,k| { test[k] = v }
     verifyEq(test, dumb)
   }
+
+  protected Void verifyGrid(RxGrid g, [Str:Obj?][] expect)
+  {
+    verifyEq(g.isEmpty, expect.size == 0)
+    verifyEq(g.size, expect.size)
+    expect.each |er,i| { verifyRec(g[i], er) }
+  }
 }

@@ -26,11 +26,11 @@
       RxRecImpl(["id":2, "a":24, "b":"bar", "c":true]),
       RxRecImpl(["id":3, "a":18, "b":"zar", "c":false]),
     ])
-    verifyEq(g.isEmpty, false)
-    verifyEq(g.size, 3)
-    verifyRec(g[0], ["id":1, "a":12, "b":"foo", "c":false])
-    verifyRec(g[1], ["id":2, "a":24, "b":"bar", "c":true])
-    verifyRec(g[2], ["id":3, "a":18, "b":"zar", "c":false])
+    verifyGrid(g, [
+      ["id":1, "a":12, "b":"foo", "c":false],
+      ["id":2, "a":24, "b":"bar", "c":true],
+      ["id":3, "a":18, "b":"zar", "c":false],
+    ])
 
     // out of bounds
     verifyErr(IndexErr#) { x := g[4] }

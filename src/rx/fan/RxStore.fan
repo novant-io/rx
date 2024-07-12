@@ -13,6 +13,9 @@
 ** RxStore manages the state of namespace of RxGrids.
 @Js const mixin RxStore
 {
+  ** Regster a new grid for this store.
+  abstract Void register(Str key, RxGrid grid)
+
   ** Get the grid for given 'key' or null if not found.
   abstract RxGrid? grid(Str key)
 }
