@@ -14,8 +14,9 @@
 @Js internal const class DefRxGrid : RxGrid
 {
   ** Constructor.
-  new make(RxRec[] recs := RxRec#.emptyList)
+  new make(Str:Obj? meta := [:], RxRec[] recs := RxRec#.emptyList)
   {
+    this.meta = meta
     this.recs = recs
   }
 
@@ -25,9 +26,8 @@
   ** Return number of records in this grid.
   override Int size() { recs.size }
 
-  // TODO
-  // ** Metadata for this grid.
-  // abstract Str:Obj? meta()
+  ** Metadata for this grid.
+  override const Str:Obj? meta
 
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.

@@ -19,9 +19,8 @@
   ** Return number of records in this grid.
   abstract Int size()
 
-  // TODO
-  // ** Metadata for this grid.
-  // abstract Str:Obj? meta()
+  ** Metadata for this grid.
+  abstract Str:Obj? meta()
 
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
