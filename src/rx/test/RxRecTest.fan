@@ -6,7 +6,7 @@
 //   11 Jul 2024  Andy Frank  Creation
 //
 
-@Js class RxRecTest : Test
+@Js class RxRecTest : AbstractRxTest
 {
 
 //////////////////////////////////////////////////////////////////////////

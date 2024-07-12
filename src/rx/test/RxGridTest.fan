@@ -6,7 +6,7 @@
 //   11 Jul 2024  Andy Frank  Creation
 //
 
-@Js class RxGridTest : Test
+@Js class RxGridTest : AbstractRxTest
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,17 +35,5 @@
     // out of bounds
     verifyErr(IndexErr#) { x := g[4] }
     verifyErr(IndexErr#) { x := g[-5] }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Support
-//////////////////////////////////////////////////////////////////////////
-
-  private Void verifyRec(RxRec rec, Str:Obj? expect)
-  {
-    dumb := Str:Obj?[:].setAll(expect)
-    test := Str:Obj?[:]
-    rec.each |v,k| { test[k] = v }
-    verifyEq(test, dumb)
   }
 }

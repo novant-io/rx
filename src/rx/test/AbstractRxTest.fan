@@ -6,14 +6,18 @@
 //   12 Jul 2024  Andy Frank  Creation
 //
 
-@Js class RxStoreTest : AbstractRxTest
+@Js abstract class AbstractRxTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Impl
+// Verify Helpers
 //////////////////////////////////////////////////////////////////////////
 
-  Void testImpl()
+  protected Void verifyRec(RxRec rec, Str:Obj? expect)
   {
+    dumb := Str:Obj?[:].setAll(expect)
+    test := Str:Obj?[:]
+    rec.each |v,k| { test[k] = v }
+    verifyEq(test, dumb)
   }
 }
