@@ -18,7 +18,13 @@
   {
     this.map = map
     this.id  = map["id"] ?: throw ArgErr("Missing 'id' key")
+
+    // TODO FIXIT
+    this.guid = 0
   }
+
+  ** Unique ID for this record within the grid namespace.
+  override const Int guid
 
   ** Unique ID for this record within the dataset.
   override const Int id
