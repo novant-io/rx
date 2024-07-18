@@ -23,7 +23,9 @@
   ** contain an integer 'id' field.
   This addRec(Str bucket, Str:Obj? map)
   {
-    diffs.add(RxDiff.makeAdd(map))
+    diffs := dmap[bucket] ?: RxDiff[,]
+    diffs.add(RxDiff.makeAdd(bucket, map))
+    dmap[bucket] = diffs
     return this
   }
 
@@ -33,10 +35,25 @@
     // short-circuit if already committed
     if (committed) return
 
-    // TODO
+    // apply diffs
+    dmap.each |diffs, name|
+    {
+      bucket := store.bucket(name)
+      recs   := bucket.recs.dup
+      diffs.each |diff|
+      {
+        switch (diff.op)
+        {
+          case 0: recs.add(RxRec(diff.mod))
+        }
+
+        // TODO
+      }
+      bucket.recsRef.val = recs.toImmutable
+    }
   }
 
   private RxStore store
   private Bool committed := false
-  private RxDiff[] diffs := [,]
+  private Str:RxDiff[] dmap := [:] { it.ordered=true }
 }

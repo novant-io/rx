@@ -37,6 +37,13 @@
       .addRec("foo", ["id":3, "a":18, "b":"zar", "c":false])
       .commit
 
+    // verify
+    verifyBucket(foo, [
+      ["id":1, "a":12, "b":"foo", "c":false],
+      ["id":2, "a":24, "b":"bar", "c":true],
+      ["id":3, "a":18, "b":"zar", "c":false],
+    ])
+
     /*
     //
     // Grid A

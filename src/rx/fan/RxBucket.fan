@@ -56,5 +56,6 @@ using concurrent
   }
 
 // TODO
-  private const RxRec[] recs := [,]
+  internal RxRec[] recs() { recsRef.val }
+  internal const AtomicRef recsRef := AtomicRef(RxRec#.emptyList)
 }
