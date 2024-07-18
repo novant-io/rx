@@ -12,20 +12,18 @@ using concurrent
 ** RxBucket
 *************************************************************************
 
-** RxBucket contains a list of RxRec records.
+** RxBucket contains a list of RxRec records where ids
+** are unique within the bucket.
 @Js const class RxBucket
 {
   ** Constructor.
-  new make(Str:Obj? meta := [:], RxRec[] recs := RxRec#.emptyList)
+  internal new make(Str name)
   {
-    this.meta = meta
-    this.recs = recs
+    this.name = name
   }
 
-  ** The key name for this bucket in the parent 'RxStore' namespace,
-  ** or 'null' if this grid does not exist in a namespace.
-  Str? key() { keyRef.val }
-  internal const AtomicRef keyRef := AtomicRef()
+  ** Name of this bucket.
+  const Str name
 
   ** Convenience for `size == 0`
   Bool isEmpty() { recs.isEmpty }
@@ -33,8 +31,8 @@ using concurrent
   ** Return number of records in this bucket.
   Int size() { recs.size }
 
-  ** Metadata for this grid.
-  const Str:Obj? meta
+  // ** Metadata for this grid.
+  // const Str:Obj? meta
 
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
@@ -57,5 +55,6 @@ using concurrent
     recs[ix] = rec
   }
 
-  private const RxRec[] recs
+// TODO
+  private const RxRec[] recs := [,]
 }

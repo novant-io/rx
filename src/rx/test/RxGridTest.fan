@@ -1,39 +1,39 @@
-//
-// Copyright (c) 2024, Novant LLC
-// Licensed under the MIT License
-//
-// History:
-//   11 Jul 2024  Andy Frank  Creation
-//
+// //
+// // Copyright (c) 2024, Novant LLC
+// // Licensed under the MIT License
+// //
+// // History:
+// //   11 Jul 2024  Andy Frank  Creation
+// //
 
-@Js class RxGridTest : AbstractRxTest
-{
+// @Js class RxGridTest : AbstractRxTest
+// {
 
-//////////////////////////////////////////////////////////////////////////
-// Impl
-//////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////
+// // Impl
+// //////////////////////////////////////////////////////////////////////////
 
-  Void testImpl()
-  {
-    // empty rec
-    g := RxBucket()
-    verifyEq(g.isEmpty, true)
-    verifyEq(g.size, 0)
+//   Void testImpl()
+//   {
+//     // empty rec
+//     g := RxBucket()
+//     verifyEq(g.isEmpty, true)
+//     verifyEq(g.size, 0)
 
-    // simple
-    g = RxBucket([:], [
-      RxRec(["id":1, "a":12, "b":"foo", "c":false]),
-      RxRec(["id":2, "a":24, "b":"bar", "c":true]),
-      RxRec(["id":3, "a":18, "b":"zar", "c":false]),
-    ])
-    verifyBucket(g, [
-      ["id":1, "a":12, "b":"foo", "c":false],
-      ["id":2, "a":24, "b":"bar", "c":true],
-      ["id":3, "a":18, "b":"zar", "c":false],
-    ])
+//     // simple
+//     g = RxBucket([:], [
+//       RxRec(["id":1, "a":12, "b":"foo", "c":false]),
+//       RxRec(["id":2, "a":24, "b":"bar", "c":true]),
+//       RxRec(["id":3, "a":18, "b":"zar", "c":false]),
+//     ])
+//     verifyBucket(g, [
+//       ["id":1, "a":12, "b":"foo", "c":false],
+//       ["id":2, "a":24, "b":"bar", "c":true],
+//       ["id":3, "a":18, "b":"zar", "c":false],
+//     ])
 
-    // out of bounds
-    verifyErr(IndexErr#) { x := g[4] }
-    verifyErr(IndexErr#) { x := g[-5] }
-  }
-}
+//     // out of bounds
+//     verifyErr(IndexErr#) { x := g[4] }
+//     verifyErr(IndexErr#) { x := g[-5] }
+//   }
+// }

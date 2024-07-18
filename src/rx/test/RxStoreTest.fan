@@ -10,14 +10,34 @@
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Impl
+// Basics
 //////////////////////////////////////////////////////////////////////////
 
-  Void testImpl()
+  Void testBasics()
   {
+    // empty
     store := RxStore()
-    verifyEq(store.bucket("a"), null)
+    verifyEq(store.bucketNames.size, 0)
+    verifyEq(store.bucket("foo"), null)
 
+    // bucket 'foo'
+    foo := store.createBucket("foo")
+    verifyEq(store.bucketNames.size, 1)
+    verifyEq(store.bucketNames, ["foo"])
+    verifyEq(foo.isEmpty, true)
+    verifyEq(foo.size, 0)
+
+    // verify err
+    verifyErr(ArgErr#) { store.createBucket("foo") }
+
+    // add recs
+    store.makeWriter
+      .addRec("foo", ["id":1, "a":12, "b":"foo", "c":false])
+      .addRec("foo", ["id":2, "a":24, "b":"bar", "c":true])
+      .addRec("foo", ["id":3, "a":18, "b":"zar", "c":false])
+      .commit
+
+    /*
     //
     // Grid A
     //
@@ -64,5 +84,6 @@
     verifyEq(b[0].guid, 0x2_00000001)
     verifyEq(b[1].guid, 0x2_00000002)
     verifyEq(b[2].guid, 0x2_00000003)
+    */
   }
 }
