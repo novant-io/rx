@@ -21,15 +21,15 @@ using concurrent
 //////////////////////////////////////////////////////////////////////////
 
   ** Regster a new grid for this store.
-  Void register(Str key, RxGrid grid)
+  Void register(Str key, RxBucket bucket)
   {
     // verify does not exists
-    if (this.grid(key) != null)
+    if (this.bucket(key) != null)
       throw ArgErr("Key already registered '${key}'")
 
-    // store grid and config key
-    gmap[key] = grid
-    grid.keyRef.val = key
+    // store bucket and config key
+    bmap[key] = bucket
+    bucket.keyRef.val = key
 
     // store key hash
     keyHash := kmap.size + 1
@@ -44,7 +44,7 @@ using concurrent
     //   guid := high.or(low)
     //
     high := keyHash * 2.pow(32)
-    grid.each |r|
+    bucket.each |r|
     {
       low := r.id.and(0xffff_ffff)
       r.guidRef.val = high + low
@@ -55,10 +55,10 @@ using concurrent
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get the grid for given 'key' or null if not found.
-  RxGrid? grid(Str key)
+  ** Get the bucket for given 'key' or null if not found.
+  RxBucket? bucket(Str key)
   {
-    gmap[key]
+    bmap[key]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,13 +72,13 @@ using concurrent
 
   }
 
-  ** Verify rec is within this grid store namespace
+  ** Verify rec is within this bucket store namespace
   private Void verifyRecNs(RxRec rec)
   {
     // must have guid
     if (rec.guid == 0) throw ArgErr("Record not part of namespace")
 
-    // verify grid key hash
+    // verify bucket key hash
     keyHash := rec.guid / 2.pow(32)
     if (kmap[keyHash] == null) throw ArgErr("Record not part of namespace")
 
@@ -90,5 +90,5 @@ using concurrent
 //////////////////////////////////////////////////////////////////////////
 
   private const ConcurrentMap kmap := ConcurrentMap()
-  private const ConcurrentMap gmap := ConcurrentMap()
+  private const ConcurrentMap bmap := ConcurrentMap()
 }

@@ -9,11 +9,11 @@
 using concurrent
 
 *************************************************************************
-** RxGrid
+** RxBucket
 *************************************************************************
 
-** RxGrid models a grid of RxRec records.
-@Js const class RxGrid
+** RxBucket contains a list of RxRec records.
+@Js const class RxBucket
 {
   ** Constructor.
   new make(Str:Obj? meta := [:], RxRec[] recs := RxRec#.emptyList)
@@ -22,7 +22,7 @@ using concurrent
     this.recs = recs
   }
 
-  ** The key name for this grid in the parent 'RxStore' namespace,
+  ** The key name for this bucket in the parent 'RxStore' namespace,
   ** or 'null' if this grid does not exist in a namespace.
   Str? key() { keyRef.val }
   internal const AtomicRef keyRef := AtomicRef()
@@ -30,7 +30,7 @@ using concurrent
   ** Convenience for `size == 0`
   Bool isEmpty() { recs.isEmpty }
 
-  ** Return number of records in this grid.
+  ** Return number of records in this bucket.
   Int size() { recs.size }
 
   ** Metadata for this grid.
@@ -44,10 +44,17 @@ using concurrent
     recs[index]
   }
 
-  ** Iterate each record in this grid.
+  ** Iterate each record in this bucket.
   Void each(|RxRec rec, Int index| f)
   {
     recs.each |r,i| { f(r,i) }
+  }
+
+  ** Update the given record id with a new version.
+  internal Void update(Int id, RxRec rec)
+  {
+    ix := recs.findIndex |r| { r.id == id }
+    recs[ix] = rec
   }
 
   private const RxRec[] recs

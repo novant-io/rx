@@ -21,10 +21,10 @@
     verifyEq(test, dumb)
   }
 
-  protected Void verifyGrid(RxGrid g, [Str:Obj?][] expect)
+  protected Void verifyBucket(RxBucket b, [Str:Obj?][] expect)
   {
-    verifyEq(g.isEmpty, expect.size == 0)
-    verifyEq(g.size, expect.size)
-    expect.each |er,i| { verifyRec(g[i], er) }
+    verifyEq(b.isEmpty, expect.size == 0)
+    verifyEq(b.size, expect.size)
+    expect.each |er,i| { verifyRec(b[i], er) }
   }
 }

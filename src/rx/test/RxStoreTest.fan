@@ -16,12 +16,12 @@
   Void testImpl()
   {
     store := RxStore()
-    verifyEq(store.grid("a"), null)
+    verifyEq(store.bucket("a"), null)
 
     //
     // Grid A
     //
-    u := RxGrid([:], [
+    u := RxBucket([:], [
       RxRec(["id":1, "a":12, "b":"foo", "c":false]),
       RxRec(["id":2, "a":24, "b":"bar", "c":true]),
       RxRec(["id":3, "a":18, "b":"zar", "c":false]),
@@ -34,9 +34,9 @@
 
     store.register("a", u)
 
-    a := store.grid("a")
+    a := store.bucket("a")
     verifyEq(a.key, "a")
-    verifyGrid(a, [
+    verifyBucket(a, [
       ["id":1, "a":12, "b":"foo", "c":false],
       ["id":2, "a":24, "b":"bar", "c":true],
       ["id":3, "a":18, "b":"zar", "c":false],
@@ -48,15 +48,15 @@
     //
     // Grid B
     //
-    store.register("b", RxGrid([:], [
+    store.register("b", RxBucket([:], [
       RxRec(["id":1, "a":912, "b":"b_foo", "c":false]),
       RxRec(["id":2, "a":924, "b":"b_bar", "c":true]),
       RxRec(["id":3, "a":918, "b":"b_zar", "c":false]),
     ]))
 
-    b := store.grid("b")
+    b := store.bucket("b")
     verifyEq(b.key, "b")
-    verifyGrid(b, [
+    verifyBucket(b, [
       ["id":1, "a":912, "b":"b_foo", "c":false],
       ["id":2, "a":924, "b":"b_bar", "c":true],
       ["id":3, "a":918, "b":"b_zar", "c":false],
