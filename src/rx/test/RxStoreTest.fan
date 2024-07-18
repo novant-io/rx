@@ -18,13 +18,17 @@
     store := DefRxStore()
     verifyEq(store.grid("a"), null)
 
-    store.register("a", DefRxGrid([:], [
+    u := DefRxGrid([:], [
       DefRxRec(["id":1, "a":12, "b":"foo", "c":false]),
       DefRxRec(["id":2, "a":24, "b":"bar", "c":true]),
       DefRxRec(["id":3, "a":18, "b":"zar", "c":false]),
-    ]))
+    ])
+
+    verifyEq(u.key, null)
+    store.register("a", u)
 
     a := store.grid("a")
+    verifyEq(a.key, "a")
     verifyGrid(a, [
       ["id":1, "a":12, "b":"foo", "c":false],
       ["id":2, "a":24, "b":"bar", "c":true],

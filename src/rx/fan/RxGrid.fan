@@ -6,13 +6,20 @@
 //   11 Jul 2024  Andy Frank  Creation
 //
 
+using concurrent
+
 *************************************************************************
 ** RxGrid
 *************************************************************************
 
 ** RxGrid models a grid of RxRec records.
-@Js const mixin RxGrid
+@Js abstract const class RxGrid
 {
+  // ** The key name for this grid in the parent 'RxStore' namespace,
+  // ** or 'null' if this grid does not exist in a namespace.
+  Str? key() { keyRef.val }
+  internal const AtomicRef keyRef := AtomicRef()
+
   ** Convenience for `size == 0`
   abstract Bool isEmpty()
 

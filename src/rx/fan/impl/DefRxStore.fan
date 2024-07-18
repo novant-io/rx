@@ -20,6 +20,7 @@ using concurrent
   {
     if (map.containsKey(key)) throw ArgErr("Key already registered '${key}'")
     map[key] = grid
+    grid.keyRef.val = key
   }
 
   ** Get the grid for given 'key' or null if not found.
