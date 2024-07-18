@@ -6,17 +6,20 @@
 //   11 Jul 2024  Andy Frank  Creation
 //
 
+using concurrent
+
 *************************************************************************
 ** RxRec
 *************************************************************************
 
 ** RxRec models a record.
-@Js const mixin RxRec
+@Js abstract const class RxRec
 {
-  // ** The unique record id within the parent namespace, or
-  // ** if this record exists outside of a grid or an 'RxStore'
-  // ** namespace, then this value will be '0'.
-  // abstract Int guid()
+  ** The unique record id within the parent namespace, or
+  ** if this record exists outside of a grid or an 'RxStore'
+  ** namespace, then this value will be '0'.
+  Int guid() { guidRef.val }
+  internal const AtomicInt guidRef := AtomicInt()
 
   ** Convenience for 'rec->id' to get the unique ID
   ** for this record within the dataset.
