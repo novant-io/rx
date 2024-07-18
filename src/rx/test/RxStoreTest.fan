@@ -21,10 +21,10 @@
     //
     // Grid A
     //
-    u := DefRxGrid([:], [
-      DefRxRec(["id":1, "a":12, "b":"foo", "c":false]),
-      DefRxRec(["id":2, "a":24, "b":"bar", "c":true]),
-      DefRxRec(["id":3, "a":18, "b":"zar", "c":false]),
+    u := RxGrid([:], [
+      RxRec(["id":1, "a":12, "b":"foo", "c":false]),
+      RxRec(["id":2, "a":24, "b":"bar", "c":true]),
+      RxRec(["id":3, "a":18, "b":"zar", "c":false]),
     ])
 
     verifyEq(u.key, null)
@@ -48,10 +48,10 @@
     //
     // Grid B
     //
-    store.register("b", DefRxGrid([:], [
-      DefRxRec(["id":1, "a":912, "b":"b_foo", "c":false]),
-      DefRxRec(["id":2, "a":924, "b":"b_bar", "c":true]),
-      DefRxRec(["id":3, "a":918, "b":"b_zar", "c":false]),
+    store.register("b", RxGrid([:], [
+      RxRec(["id":1, "a":912, "b":"b_foo", "c":false]),
+      RxRec(["id":2, "a":924, "b":"b_bar", "c":true]),
+      RxRec(["id":3, "a":918, "b":"b_zar", "c":false]),
     ]))
 
     b := store.grid("b")

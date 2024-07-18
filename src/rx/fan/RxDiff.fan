@@ -11,8 +11,24 @@
 *************************************************************************
 
 ** RxDiff models a modification to a 'RxRec'.
-@Js const mixin RxDiff
+@Js internal const class RxDiff
 {
+  ** Create a new diff for given record.
+  new make(RxRec rec, Str:Obj? changes)
+  {
+    // walk changes and remove any unmodified fields
+    mod := Str:Obj?[:]
+    changes.each |v,k| {
+      if (rec[k] != v) mod[k] = v
+    }
+
+    this.id  = rec.id
+    this.mod = mod
+  }
+
   ** The corresponding record id for this diff.
-  abstract Int id()
+  const Int id
+
+  ** Modifications to apply to record.
+  const Str:Obj? mod
 }

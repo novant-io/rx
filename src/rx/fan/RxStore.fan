@@ -65,7 +65,25 @@ using concurrent
 // Modify
 //////////////////////////////////////////////////////////////////////////
 
-  //
+  ** Modify the given record.
+  Void modify(RxRec rec, Str:Obj? changes)
+  {
+    verifyRecNs(rec)
+
+  }
+
+  ** Verify rec is within this grid store namespace
+  private Void verifyRecNs(RxRec rec)
+  {
+    // must have guid
+    if (rec.guid == 0) throw ArgErr("Record not part of namespace")
+
+    // verify grid key hash
+    keyHash := rec.guid / 2.pow(32)
+    if (kmap[keyHash] == null) throw ArgErr("Record not part of namespace")
+
+    // should be good
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Storage

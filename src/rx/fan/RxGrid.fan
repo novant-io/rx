@@ -13,27 +13,42 @@ using concurrent
 *************************************************************************
 
 ** RxGrid models a grid of RxRec records.
-@Js abstract const class RxGrid
+@Js const class RxGrid
 {
-  // ** The key name for this grid in the parent 'RxStore' namespace,
-  // ** or 'null' if this grid does not exist in a namespace.
+  ** Constructor.
+  new make(Str:Obj? meta := [:], RxRec[] recs := RxRec#.emptyList)
+  {
+    this.meta = meta
+    this.recs = recs
+  }
+
+  ** The key name for this grid in the parent 'RxStore' namespace,
+  ** or 'null' if this grid does not exist in a namespace.
   Str? key() { keyRef.val }
   internal const AtomicRef keyRef := AtomicRef()
 
   ** Convenience for `size == 0`
-  abstract Bool isEmpty()
+  Bool isEmpty() { recs.isEmpty }
 
   ** Return number of records in this grid.
-  abstract Int size()
+  Int size() { recs.size }
 
   ** Metadata for this grid.
-  abstract Str:Obj? meta()
+  const Str:Obj? meta
 
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
   @Operator
-  abstract RxRec? get(Int index)
+  RxRec? get(Int index)
+  {
+    recs[index]
+  }
 
   ** Iterate each record in this grid.
-  abstract Void each(|RxRec rec, Int index| f)
+  Void each(|RxRec rec, Int index| f)
+  {
+    recs.each |r,i| { f(r,i) }
+  }
+
+  private const RxRec[] recs
 }
