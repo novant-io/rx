@@ -18,6 +18,9 @@
     store := DefRxStore()
     verifyEq(store.grid("a"), null)
 
+    //
+    // Grid A
+    //
     u := DefRxGrid([:], [
       DefRxRec(["id":1, "a":12, "b":"foo", "c":false]),
       DefRxRec(["id":2, "a":24, "b":"bar", "c":true]),
@@ -38,8 +41,28 @@
       ["id":2, "a":24, "b":"bar", "c":true],
       ["id":3, "a":18, "b":"zar", "c":false],
     ])
-    verifyEq(u[0].guid, 0x1_00000001)
-    verifyEq(u[1].guid, 0x1_00000002)
-    verifyEq(u[2].guid, 0x1_00000003)
+    verifyEq(a[0].guid, 0x1_00000001)
+    verifyEq(a[1].guid, 0x1_00000002)
+    verifyEq(a[2].guid, 0x1_00000003)
+
+    //
+    // Grid B
+    //
+    store.register("b", DefRxGrid([:], [
+      DefRxRec(["id":1, "a":912, "b":"b_foo", "c":false]),
+      DefRxRec(["id":2, "a":924, "b":"b_bar", "c":true]),
+      DefRxRec(["id":3, "a":918, "b":"b_zar", "c":false]),
+    ]))
+
+    b := store.grid("b")
+    verifyEq(b.key, "b")
+    verifyGrid(b, [
+      ["id":1, "a":912, "b":"b_foo", "c":false],
+      ["id":2, "a":924, "b":"b_bar", "c":true],
+      ["id":3, "a":918, "b":"b_zar", "c":false],
+    ])
+    verifyEq(b[0].guid, 0x2_00000001)
+    verifyEq(b[1].guid, 0x2_00000002)
+    verifyEq(b[2].guid, 0x2_00000003)
   }
 }
