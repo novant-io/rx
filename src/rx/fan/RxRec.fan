@@ -12,14 +12,23 @@ using concurrent
 ** RxRec
 *************************************************************************
 
-** RxRec models a record.
+** RxRec models a record of name-value fields.
 @Js const class RxRec
 {
+  // ** Tag values for this rec.
+  // const Str:Obj tags
+
   ** Construct a new RxRec instance.
   new make(Str:Obj? map := [:])
   {
     this.map = map
     this.id  = map["id"] ?: throw ArgErr("Missing 'id' key")
+    this.ver = 0
+
+// TODO
+    // // sanity checks
+    // if (id  < 1 || id  > 0xffff_ffff) throw ArgErr("Id out of bounds: $id")
+    // if (ver < 0 || ver > 0xffff_ffff) throw ArgErr("Version out of bounds: $ver")
   }
 
   **
@@ -37,6 +46,10 @@ using concurrent
   ** Convenience for 'rec->id' to get the unique ID
   ** for this record within the dataset.
   const Int id
+
+  ** Version of this rec. Each modification to this rec
+  ** inside a 'Bucket' will increment this value.
+  internal const Int ver
 
   ** Get the value for the given `key` or 'null' if not found.
   @Operator
