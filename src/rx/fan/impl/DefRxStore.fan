@@ -15,18 +15,16 @@ using concurrent
 ** Default RxStore implmentation.
 @Js internal const class DefRxStore : RxStore
 {
-  ** Regster a new grid for this store.
-  override Void register(Str key, RxGrid grid)
-  {
-    if (map.containsKey(key)) throw ArgErr("Key already registered '${key}'")
-    map[key] = grid
-    grid.keyRef.val = key
-  }
-
   ** Get the grid for given 'key' or null if not found.
   override RxGrid? grid(Str key)
   {
     map[key]
+  }
+
+  ** Store this grid for given key.
+  protected override Void store(Str key, RxGrid grid)
+  {
+    map[key] = grid
   }
 
   private const ConcurrentMap map := ConcurrentMap()
