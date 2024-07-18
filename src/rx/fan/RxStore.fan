@@ -6,6 +6,8 @@
 //   11 Jul 2024  Andy Frank  Creation
 //
 
+using concurrent
+
 *************************************************************************
 ** RxStore
 *************************************************************************
@@ -24,12 +26,23 @@
     store(key, grid)
     grid.keyRef.val = key
 
-    // iterate and set guid for each key
-    high := key.hash.shiftl(32)
+    // store key hash
+    keyHash := keyHmap.size + 1
+    keyHmap[key] = keyHash
+
+    // iterate and set guid for each key; note that in JS
+    // sys::Int.shiftl only operates on the lower 32 bits;
+    // so we need to mult and add operators to achive the
+    // same result
+    //
+    //   high := keyHash.shiftl(32)
+    //   guid := high.or(low)
+    //
+    high := keyHash * 2.pow(32)
     grid.each |r|
     {
       low := r.id.and(0xffff_ffff)
-      r.guidRef.val = high.or(low)
+      r.guidRef.val = high + low
     }
   }
 
@@ -38,4 +51,6 @@
 
   ** Store this grid for given key.
   protected abstract Void store(Str key, RxGrid grid)
+
+  private const ConcurrentMap keyHmap := ConcurrentMap()
 }

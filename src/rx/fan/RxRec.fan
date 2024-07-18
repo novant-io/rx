@@ -15,9 +15,15 @@ using concurrent
 ** RxRec models a record.
 @Js abstract const class RxRec
 {
+  **
   ** The unique record id within the parent namespace, or
   ** if this record exists outside of a grid or an 'RxStore'
   ** namespace, then this value will be '0'.
+  **
+  ** Note that is ID is not durable between store and grid
+  ** instantiations and should not be used for long term
+  ** reference.
+  **
   Int guid() { guidRef.val }
   internal const AtomicInt guidRef := AtomicInt()
 
