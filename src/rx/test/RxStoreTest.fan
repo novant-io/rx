@@ -25,6 +25,10 @@
     ])
 
     verifyEq(u.key, null)
+    verifyEq(u[0].guid, 0)
+    verifyEq(u[1].guid, 0)
+    verifyEq(u[2].guid, 0)
+
     store.register("a", u)
 
     a := store.grid("a")
@@ -34,5 +38,8 @@
       ["id":2, "a":24, "b":"bar", "c":true],
       ["id":3, "a":18, "b":"zar", "c":false],
     ])
+    verifyEq(u[0].guid, 0x61_00000001)
+    verifyEq(u[1].guid, 0x61_00000002)
+    verifyEq(u[2].guid, 0x61_00000003)
   }
 }

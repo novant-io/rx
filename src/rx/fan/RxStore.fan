@@ -23,6 +23,14 @@
     // store grid and config key
     store(key, grid)
     grid.keyRef.val = key
+
+    // iterate and set guid for each key
+    high := key.hash.shiftl(32)
+    grid.each |r|
+    {
+      low := r.id.and(0xffff_ffff)
+      r.guidRef.val = high.or(low)
+    }
   }
 
   ** Get the grid for given 'key' or null if not found.

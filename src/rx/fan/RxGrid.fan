@@ -32,7 +32,7 @@ using concurrent
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
   @Operator
-  abstract Obj? get(Int index)
+  abstract RxRec? get(Int index)
 
   ** Iterate each record in this grid.
   abstract Void each(|RxRec rec, Int index| f)

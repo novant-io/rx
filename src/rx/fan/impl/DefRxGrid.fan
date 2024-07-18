@@ -32,7 +32,7 @@
   ** Get the record at the given index or throws 'IndexErr'
   ** if given index is out of bounds.
   @Operator
-  override Obj? get(Int index)
+  override RxRec? get(Int index)
   {
     recs[index]
   }
