@@ -13,8 +13,13 @@ using concurrent
 *************************************************************************
 
 ** RxStore manages the state of namespace of RxGrids.
-@Js abstract const class RxStore
+@Js const class RxStore
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Registration
+//////////////////////////////////////////////////////////////////////////
+
   ** Regster a new grid for this store.
   Void register(Str key, RxGrid grid)
   {
@@ -23,12 +28,12 @@ using concurrent
       throw ArgErr("Key already registered '${key}'")
 
     // store grid and config key
-    store(key, grid)
+    gmap[key] = grid
     grid.keyRef.val = key
 
     // store key hash
-    keyHash := keyHmap.size + 1
-    keyHmap[key] = keyHash
+    keyHash := kmap.size + 1
+    kmap[key] = keyHash
 
     // iterate and set guid for each key; note that in JS
     // sys::Int.shiftl only operates on the lower 32 bits;
@@ -46,11 +51,26 @@ using concurrent
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
   ** Get the grid for given 'key' or null if not found.
-  abstract RxGrid? grid(Str key)
+  RxGrid? grid(Str key)
+  {
+    gmap[key]
+  }
 
-  ** Store this grid for given key.
-  protected abstract Void store(Str key, RxGrid grid)
+//////////////////////////////////////////////////////////////////////////
+// Modify
+//////////////////////////////////////////////////////////////////////////
 
-  private const ConcurrentMap keyHmap := ConcurrentMap()
+  //
+
+//////////////////////////////////////////////////////////////////////////
+// Storage
+//////////////////////////////////////////////////////////////////////////
+
+  private const ConcurrentMap kmap := ConcurrentMap()
+  private const ConcurrentMap gmap := ConcurrentMap()
 }

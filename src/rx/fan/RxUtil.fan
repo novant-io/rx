@@ -13,12 +13,6 @@
 ** RxUtil provides utility methods for Rx framework.
 @Js const class RxUtil
 {
-  ** Return a new 'RxStore' instance.
-  static RxStore makeStore()
-  {
-    DefRxStore()
-  }
-
   ** Return a new 'RxGrid' instance for given meta and record list.
   static RxGrid grid(Str:Obj? meta, RxRec[] recs)
   {

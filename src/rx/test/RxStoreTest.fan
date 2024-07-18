@@ -15,7 +15,7 @@
 
   Void testImpl()
   {
-    store := DefRxStore()
+    store := RxStore()
     verifyEq(store.grid("a"), null)
 
     //
