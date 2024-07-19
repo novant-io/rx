@@ -32,6 +32,16 @@
     return this
   }
 
+  ** Update an existing record for given bucket and record id.
+  This update(Str bucket, Int id, Str:Obj? changes)
+  {
+    rec  := wmap[bucket].get(id) ?: throw ArgErr("Record not found '${id}'")
+    diff := RxDiff.makeUpdate(bucket, id, changes)
+    clog.add(diff)
+    apply(diff)
+    return this
+  }
+
   ** Commit the current changes and return a new RxStore.
   RxStore commit()
   {
@@ -45,9 +55,15 @@
     switch (diff.op)
     {
       case 0:
-       b := diff.bucket
-       r := RxRec(diff.mod)
-       wmap[b] = wmap[b].add(r.id, r)
+        b := diff.bucket
+        r := RxRec(diff.changes)
+        wmap[b] = wmap[b].add(r.id, r)
+
+      case 1:
+        b := diff.bucket
+        c := (RxRec)wmap[b].get(diff.id)
+        u := c.merge(diff.changes)
+        wmap[b] = wmap[b].set(diff.id, u)
     }
   }
 

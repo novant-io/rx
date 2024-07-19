@@ -18,22 +18,16 @@
   {
     this.bucket = bucket
     this.op  = 0
-    this.mod = map
+    this.changes = map
   }
 
   ** Return diff to udpate existing rec.
-  new makeUpdate(Str bucket, RxRec rec, Str:Obj? changes)
+  new makeUpdate(Str bucket, Int id, Str:Obj? changes)
   {
-    // walk changes and remove any unmodified fields
-    mod := Str:Obj?[:]
-    changes.each |v,k| {
-      if (rec[k] != v) mod[k] = v
-    }
-
     this.bucket = bucket
     this.op  = 1
-    this.id  = rec.id
-    this.mod = mod
+    this.id  = id
+    this.changes = changes
   }
 
   ** TODO: use Int ref instead of Str [pointer]?
@@ -46,5 +40,5 @@
   const Int? id
 
   ** Modifications to apply to record.
-  const Str:Obj? mod
+  const Str:Obj? changes
 }
