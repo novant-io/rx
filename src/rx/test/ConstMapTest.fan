@@ -1,28 +1,17 @@
-/*
-//
-// This code was originally written as part of the Bruno project
-// and is used with minor modifications for this project:
-//
-// https://github.com/afrankvt/bruno
 //
 // Copyright (c) 2017, Andy Frank
 // Licensed under the MIT License
 //
 // History:
-//   9 Jul 2017  Andy Frank  Creation
-//  18 Jul 2024  Andy Frank  Minor changes for Rx
+//  18 Jul 2024  Andy Frank  Creation
 //
 
-**
-** RxRxRecMapTest
-**
-class RxRxRecMapTest : Test
-{
+*************************************************************************
+** ConstMapTest
+*************************************************************************
 
-  private RxRec makeRxRec(Int id)
-  {
-    return RxRec(["id":id])
-  }
+class ConstMapTest : Test
+{
 
 //////////////////////////////////////////////////////////////////////////
 // testEmpty
@@ -30,13 +19,13 @@ class RxRxRecMapTest : Test
 
   Void testEmpty()
   {
-    a := RxRecMap()
-    b := RxRecMap()
+    a := ConstMap()
+    b := ConstMap()
     verifyEq(a.size, 0)
     verifyEq(b.size, 0)
-    verifyEq(RxRecMap.empty.size, 0)
+    verifyEq(ConstMap.empty.size, 0)
     verify(a === b)
-    verify(a === RxRecMap.empty)
+    verify(a === ConstMap.empty)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,56 +34,53 @@ class RxRxRecMapTest : Test
 
   Void testSetBasics()
   {
-    r5 := makeRxRec(5)
-    r8 := makeRxRec(8)
-
-    a := RxRecMap()
-    b := a.set(r5)
+    a := ConstMap()
+    b := a.set(5, "foo")
     verify(a !== b)
     verifyEq(a.size, 0)
     verifyEq(b.size, 1)
     verifyEq(a.get(5), null)
-    verifyEq(b.get(5), r5)
+    verifyEq(b.get(5), "foo")
 
-    c := b.set(r8)
+    c := b.set(8, false)
     verify(a !== b)
     verify(b !== c)
     verifyEq(a.size, 0)
     verifyEq(b.size, 1)
     verifyEq(c.size, 2)
     verifyEq(a.get(5), null)
-    verifyEq(b.get(5), r5)
-    verifyEq(c.get(5), r5)
+    verifyEq(b.get(5), "foo")
+    verifyEq(c.get(5), "foo")
     verifyEq(a.get(8), null)
     verifyEq(b.get(8), null)
-    verifyEq(c.get(8), r8)
+    verifyEq(c.get(8), false)
   }
 
   Void testSetKeys()
   {
-    recs := Int:RxRec[:]
-    while (recs.size < 10_000)
+    temp := Int:Int[:]
+    while (temp.size < 10_000)
     {
       id := Int.random(0..4_294_967_296)
-      recs[id] = makeRxRec(id)
+      temp[id] = id
     }
 
-    m := RxRecMap()
-    recs.vals.each |r| { m = m.set(r) }
-    verifyEq(m.size, recs.size)
+    m := ConstMap()
+    temp.keys.each |id| { m = m.set(id, id) }
+    verifyEq(m.size, temp.size)
   }
 
   Void testSetBig()
   {
     count := 100_000
 
-    m := RxRecMap()
-    count.times |x| { m = m.set(makeRxRec(x+1)) }
+    m := ConstMap()
+    count.times |x| { m = m.set(x, x) }
     verifyEq(m.size, count)
 
     sum := 0
-    m.each |r| { sum += r.id }
-    verifyEq(sum, 5_000_050_000)
+    m.each |Int v| { sum += v }
+    verifyEq(sum, 4_999_950_000)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,18 +89,14 @@ class RxRxRecMapTest : Test
 
   Void testAddBasics()
   {
-    r2 := makeRxRec(2)
-    r4 := makeRxRec(4)
-    r6 := makeRxRec(6)
+    m := ConstMap()
+    m = m.add(2, "alpha")
+    m = m.add(4, "beta")
+    m = m.add(6, "gamma")
 
-    m := RxRecMap()
-    m = m.add(r2)
-    m = m.add(r4)
-    m = m.add(r6)
-
-    verifyErr(Err#) { m = m.add(r2) }
-    verifyErr(Err#) { m = m.add(r4) }
-    verifyErr(Err#) { m = m.add(r6) }
+    verifyErr(ArgErr#) { m = m.add(2, "err") }
+    verifyErr(ArgErr#) { m = m.add(4, "err") }
+    verifyErr(ArgErr#) { m = m.add(6, "err") }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,14 +107,14 @@ class RxRxRecMapTest : Test
   {
     count := 10_000
 
-    m := RxRecMap()
-    count.times |x| { m = m.set(makeRxRec(x+1)) }
+    m := ConstMap()
+    count.times |x| { m = m.set(x, "foo-${x}") }
     verifyEq(m.size, count)
 
     count.times |c|
     {
-      r := m.get(c+1)
-      verifyEq(r.id, c+1)
+      v := m.get(c)
+      verifyEq(v, "foo-${c}")
     }
   }
 
@@ -142,25 +124,19 @@ class RxRxRecMapTest : Test
 
   Void testRemoveBasics()
   {
-    r1 := makeRxRec(1)
-    r2 := makeRxRec(2)
-    r3 := makeRxRec(3)
-    r4 := makeRxRec(4)
-    r5 := makeRxRec(5)
-
-    m := RxRecMap()
-    m = m.set(r5)
-    m = m.set(r4)
-    m = m.set(r3)
-    m = m.set(r2)
-    m = m.set(r1)
+    m := ConstMap()
+    m = m.set(5, "epsilon")
+    m = m.set(4, "delta")
+    m = m.set(3, "gamma")
+    m = m.set(2, "beta")
+    m = m.set(1, "alpha")
     verifyEq(m.size, 5)
 
     a := m.remove(3)
     verify(a !== m)
     verifyEq(m.size, 5)
     verifyEq(a.size, 4)
-    verifyEq(m.get(3), r3)
+    verifyEq(m.get(3), "gamma")
     verifyEq(a.get(3), null)
 
     b := a.remove(1)
@@ -170,12 +146,12 @@ class RxRxRecMapTest : Test
     verifyEq(a.size, 4)
     verifyEq(b.size, 3)
     // 3
-    verifyEq(m.get(3), r3)
+    verifyEq(m.get(3), "gamma")
     verifyEq(a.get(3), null)
     verifyEq(b.get(3), null)
     // 1
-    verifyEq(m.get(1), r1)
-    verifyEq(a.get(1), r1)
+    verifyEq(m.get(1), "alpha")
+    verifyEq(a.get(1), "alpha")
     verifyEq(b.get(1), null)
 
     c := b.remove(2)
@@ -187,19 +163,19 @@ class RxRxRecMapTest : Test
     verifyEq(b.size, 3)
     verifyEq(c.size, 2)
     // 3
-    verifyEq(m.get(3), r3)
+    verifyEq(m.get(3), "gamma")
     verifyEq(a.get(3), null)
     verifyEq(b.get(3), null)
     verifyEq(c.get(3), null)
     // 1
-    verifyEq(m.get(1), r1)
-    verifyEq(a.get(1), r1)
+    verifyEq(m.get(1), "alpha")
+    verifyEq(a.get(1), "alpha")
     verifyEq(b.get(1), null)
     verifyEq(c.get(1), null)
     // 2
-    verifyEq(m.get(2), r2)
-    verifyEq(a.get(2), r2)
-    verifyEq(b.get(2), r2)
+    verifyEq(m.get(2), "beta")
+    verifyEq(a.get(2), "beta")
+    verifyEq(b.get(2), "beta")
     verifyEq(c.get(2), null)
 
     d := c.remove(5)
@@ -213,28 +189,28 @@ class RxRxRecMapTest : Test
     verifyEq(c.size, 2)
     verifyEq(d.size, 1)
     // 3
-    verifyEq(m.get(3), r3)
+    verifyEq(m.get(3), "gamma")
     verifyEq(a.get(3), null)
     verifyEq(b.get(3), null)
     verifyEq(c.get(3), null)
     verifyEq(d.get(3), null)
     // 1
-    verifyEq(m.get(1), r1)
-    verifyEq(a.get(1), r1)
+    verifyEq(m.get(1), "alpha")
+    verifyEq(a.get(1), "alpha")
     verifyEq(b.get(1), null)
     verifyEq(c.get(1), null)
     verifyEq(d.get(1), null)
     // 2
-    verifyEq(m.get(2), r2)
-    verifyEq(a.get(2), r2)
-    verifyEq(b.get(2), r2)
+    verifyEq(m.get(2), "beta")
+    verifyEq(a.get(2), "beta")
+    verifyEq(b.get(2), "beta")
     verifyEq(c.get(2), null)
     verifyEq(d.get(2), null)
     // 5
-    verifyEq(m.get(5), r5)
-    verifyEq(a.get(5), r5)
-    verifyEq(b.get(5), r5)
-    verifyEq(c.get(5), r5)
+    verifyEq(m.get(5), "epsilon")
+    verifyEq(a.get(5), "epsilon")
+    verifyEq(b.get(5), "epsilon")
+    verifyEq(c.get(5), "epsilon")
     verifyEq(d.get(5), null)
 
     e := d.remove(4)
@@ -258,14 +234,14 @@ class RxRxRecMapTest : Test
   {
     count := 10_000
 
-    m := RxRecMap()
-    count.times |x| { m = m.set(makeRxRec(x+1)) }
+    m := ConstMap()
+    count.times |x| { m = m.set(x, x) }
     verifyEq(m.size, count)
 
     cur := m.size
     count.times |c|
     {
-      m = m.remove(c+1)
+      m = m.remove(c)
       verifyEq(m.size, --cur)
     }
 
@@ -278,15 +254,14 @@ class RxRxRecMapTest : Test
 
   Void testEach()
   {
-    m := RxRecMap()
-    128.times |x| { m = m.set(makeRxRec(x+1)) }
+    m := ConstMap()
+    128.times |x| { m = m.set(x, x) }
     verifyEq(m.size, 128)
 
     y := 0
     z := 0
-    m.each |r| { y++; z+=r.id }
+    m.each |Int x| { y++; z+=x }
     verifyEq(y, 128)
-    verifyEq(z, 8256)
+    verifyEq(z, 8128)
   }
 }
-*/

@@ -1,23 +1,17 @@
 //
-// This code was originally written as part of the Bruno project
-// and is used with minor modifications for this project:
-//
-// https://github.com/afrankvt/bruno
-//
 // Copyright (c) 2017, Andy Frank
 // Licensed under the MIT License
 //
 // History:
-//   9 Jul 2017  Andy Frank  Creation
-//  18 Jul 2024  Andy Frank  Minor changes for Rx
+//  18 Jul 2024  Andy Frank  Creation
 //
 
 **************************************************************************
-** RxRecMap
+** ConstMap
 **************************************************************************
 
 **
-** RxRecMap is an immutable peristent map of ids to `RxRec` instances.
+** ConstMap is an immutable peristent map of interger ids to values.
 ** Each mutation operation - `add`, `set`, `remove` - returns a new
 ** map instance reflecting the modification.  The previous map
 ** instance remains unmodified.
@@ -26,10 +20,10 @@
 **
 ** `https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java`
 **
-@Js internal const class RxRecMap
+@Js internal const class ConstMap
 {
-  ** Empty map ingleton.
-  static const RxRecMap empty := RxRecMap.privMake(null, 0)
+  ** Empty map singleton.
+  static const ConstMap empty := ConstMap.privMake(null, 0)
 
   ** Default constructor is a convenience for `empty`.
   static new make() { empty }
@@ -50,24 +44,25 @@
     root==null ? false : root.get(0, id) != null
   }
 
-  ** Get the `RxRec` with given id, or return 'null' if not found.
-  @Operator RxRec? get(Int id)
+  ** Get the 'Obj' with given id, or return 'null' if not found.
+  @Operator Obj? get(Int id)
   {
     root==null ? null : root.get(0, id)
   }
 
-  ** Return a new map with the given 'rec' added by 'rec.id',
-  ** or throw Err if 'id' already exists.
-  RxRecMap add(RxRec rec)
+  ** Return a new map with the given 'val' added by 'id', or
+  ** throw 'ArgErr' if 'id' already exists.
+  ConstMap add(Int id, Obj val)
   {
-    if (has(rec.id)) throw Err("RxRec id already exists: $rec.id")
-    return set(rec)
+    if (has(id)) throw ArgErr("Id already exists: $id")
+    return set(id, val)
   }
 
-  ** Return a new map with the given 'rec' set using 'rec.id' as key.
-  RxRecMap set(RxRec val)
+  ** Return a new map with the given 'val' set using 'id' as key.
+  @Operator
+  ConstMap set(Int id, Obj val)
   {
-    key := val.id
+    key := id
     addedLeaf := Box(null)
     RNode newroot := (root == null ? BitmapIndexedNode.empty : root)
     newroot = newroot.set(0, key, val, addedLeaf)
@@ -79,7 +74,7 @@
 
   ** Return a new map with record with given 'id' removed. Returns
   ** 'this' if record did not exist.
-  RxRecMap remove(Int id)
+  ConstMap remove(Int id)
   {
     if (root == null) return this
 
@@ -90,7 +85,7 @@
   }
 
   // ** TODO
-  Void each(|RxRec| f)
+  Void each(|Obj| f)
   {
     if (root == null) return
     root.each(f)
@@ -116,10 +111,10 @@
 
 @Js internal const mixin RNode
 {
-  abstract RxRec? get(Int shift, Int key)
-  abstract RNode set(Int shift, Int key, RxRec val, Box addedLeaf)
+  abstract Obj? get(Int shift, Int key)
+  abstract RNode set(Int shift, Int key, Obj val, Box addedLeaf)
   abstract RNode? remove(Int shift, Int key)
-  abstract Void each(|RxRec| f)
+  abstract Void each(|Obj| f)
 
   ** Shift and mask the given hash to lower 5-bits.
   protected Int mask(Int hash, Int shift)
@@ -171,7 +166,7 @@
   }
 
   ** Set impl for ListNode
-  override RxRec? get(Int shift, Int key)
+  override Obj? get(Int shift, Int key)
   {
     idx  := mask(key.hash, shift)
     node := list[idx]
@@ -180,7 +175,7 @@
   }
 
   ** Set impl for ListNode
-  override RNode set(Int shift, Int key, RxRec val, Box addedLeaf)
+  override RNode set(Int shift, Int key, Obj val, Box addedLeaf)
   {
     idx  := mask(key.hash, shift)
     node := list[idx]
@@ -248,7 +243,7 @@
   }
 
   ** Each impl for ListNode.s
-  override Void each(|RxRec| f)
+  override Void each(|Obj| f)
   {
     i := 0
     while (true)
@@ -283,7 +278,7 @@
   }
 
   ** Get impl for BitmapIndexedNode
-  override RxRec? get(Int shift, Int key)
+  override Obj? get(Int shift, Int key)
   {
     bit := bitpos(key.hash, shift)
     if (bitmap.and(bit) == 0) return null
@@ -301,7 +296,7 @@
   }
 
   ** Set impl for BitmapIndexedNode
-  override RNode set(Int shift, Int key, RxRec val, Box addedLeaf)
+  override RNode set(Int shift, Int key, Obj val, Box addedLeaf)
   {
     bit := bitpos(key.hash, shift)
     idx := index(bit)
@@ -394,7 +389,7 @@
   }
 
   ** Each impl for BitmapIndexedNode
-  override Void each(|RxRec| f)
+  override Void each(|Obj| f)
   {
     i := 0
     while (i < list.size)
@@ -414,7 +409,7 @@
   }
 
   ** Create a new indexed node with given 2 key/val pairs.
-  private RNode createNode(Int shift, Int key1, RxRec val1, Int key2, RxRec val2)
+  private RNode createNode(Int shift, Int key1, Obj val1, Int key2, Obj val2)
   {
     key1hash := key1.hash
     key2hash := key2.hash
