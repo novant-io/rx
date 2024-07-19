@@ -20,13 +20,4 @@
     rec.each |v,k| { test[k] = v }
     verifyEq(test, dumb)
   }
-
-  // protected Void verifyBucket(RxStore store, Str name, [Str:Obj?][] expect)
-  // {
-  //   expect.each |er,i|
-  //   {
-  //     tr := store.get(name, i) // FUCK! name, er["id"])
-  //     verifyRec(tr, er)
-  //   }
-  // }
 }
