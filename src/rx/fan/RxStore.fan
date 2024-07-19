@@ -32,14 +32,19 @@ using concurrent
       recs.each |r| { c = c.add(r.id, r) }
       map[name] = c
     }
+    this.version = 1
     this.bmap = map.toImmutable
   }
 
   ** Internal ctor to create store from a writer commit log.
-  internal new makeWriter(Str:ConstMap wmap)
+  internal new makeWriter(Int version, Str:ConstMap wmap)
   {
+    this.version = version
     this.bmap = wmap.toImmutable
   }
+
+  ** Version of this store.
+  const Int version
 
   ** Return registered buckets for this store.
   Str[] buckets() { bmap.keys }

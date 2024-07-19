@@ -18,6 +18,7 @@
   {
     // create working copy of buckets
     store.bmap.each |v,k| { wmap[k] = v }
+    this.nextVer = store.version + 1
   }
 
   ** Add a new record to given bucket, where the 'map' must
@@ -35,7 +36,7 @@
   RxStore commit()
   {
     // TODO: we mark this writer as commited an no longer usable?
-    return RxStore.makeWriter(wmap)
+    return RxStore.makeWriter(nextVer, wmap)
   }
 
   ** Apply a list of diffs and update current store instance state.
@@ -50,6 +51,7 @@
     }
   }
 
+  private Int nextVer               // version to apply on commit
   private RxDiff[] clog := [,]      // commit log
   private Str:ConstMap wmap := [:]  // map of bucket_name : working rec_map
 }

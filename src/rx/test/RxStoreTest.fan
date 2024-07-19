@@ -43,6 +43,7 @@
     ]])
 
     verifyEq(a.buckets, ["foo"])
+    verifyEq(a.version, 1)
     verifyEq(a.size("foo"), 3)
     verifyRec(a.get("foo", 1), ["id":1, "a":12, "b":"foo", "c":false])
     verifyRec(a.get("foo", 2), ["id":2, "a":24, "b":"bar", "c":true])
@@ -54,6 +55,8 @@
     w.add("foo", ["id":5, "a":99, "b":"lar"])
     b := w.commit
     verify(a !== b)
+    verifyEq(a.version, 1)
+    verifyEq(b.version, 2)
     verifyEq(a.size("foo"), 3)
     verifyEq(b.size("foo"), 5)
     verifyRec(b.get("foo", 1), ["id":1, "a":12, "b":"foo", "c":false])
