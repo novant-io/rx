@@ -33,10 +33,26 @@
   }
 
   ** Update an existing record for given bucket and record id.
+  ** If record not found, this method throws 'ArgErr'.
   This update(Str bucket, Int id, Str:Obj? changes)
   {
     rec  := wmap[bucket].get(id) ?: throw ArgErr("Record not found '${id}'")
     diff := RxDiff.makeUpdate(bucket, id, changes)
+    clog.add(diff)
+    apply(diff)
+    return this
+  }
+
+  ** Delete the a record from given bucket by record id.  If
+  ** record was not found, this method does nothing.
+  This delete(Str bucket, Int id)
+  {
+    // short-circuit if id not found
+    rec := wmap[bucket].get(id)
+    if (rec == null) return this
+
+    // delete
+    diff := RxDiff.makeDelete(bucket, id)
     clog.add(diff)
     apply(diff)
     return this
@@ -54,16 +70,23 @@
   {
     switch (diff.op)
     {
+      // add
       case 0:
         b := diff.bucket
         r := RxRec(diff.changes)
         wmap[b] = wmap[b].add(r.id, r)
 
+      // update
       case 1:
         b := diff.bucket
         c := (RxRec)wmap[b].get(diff.id)
         u := c.merge(diff.changes)
         wmap[b] = wmap[b].set(diff.id, u)
+
+      // delete
+      case 2:
+        b := diff.bucket
+        wmap[b] = wmap[b].remove(diff.id)
     }
   }
 

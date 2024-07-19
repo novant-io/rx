@@ -21,13 +21,21 @@
     this.changes = map
   }
 
-  ** Return diff to udpate existing rec.
+  ** Return diff to update an existing rec.
   new makeUpdate(Str bucket, Int id, Str:Obj? changes)
   {
     this.bucket = bucket
     this.op  = 1
     this.id  = id
     this.changes = changes
+  }
+
+  ** Return diff to delete an existing rec.
+  new makeDelete(Str bucket, Int id)
+  {
+    this.bucket = bucket
+    this.op  = 2
+    this.id  = id
   }
 
   ** TODO: use Int ref instead of Str [pointer]?
@@ -40,5 +48,5 @@
   const Int? id
 
   ** Modifications to apply to record.
-  const Str:Obj? changes
+  const [Str:Obj?]? changes
 }

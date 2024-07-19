@@ -81,5 +81,23 @@
     verifyRec(a.get("foo", 1), ["id":1, "a":12, "b":"foo",        "c":false])
     verifyRec(b.get("foo", 1), ["id":1, "a":12, "b":"foo",        "c":false])
     verifyRec(c.get("foo", 1), ["id":1, "a":77, "b":"cool beans", "c":false])
+
+    // delete some recs
+    w = RxWriter(a)
+    w.delete("foo", 1)
+    d := w.commit
+    verify(a !== d)
+    verifyEq(a.version, 1)
+    verifyEq(b.version, 2)
+    verifyEq(c.version, 3)
+    verifyEq(d.version, 2)  // since we started with 'a' we move to 2
+    verifyEq(a.size("foo"), 3)
+    verifyEq(b.size("foo"), 5)
+    verifyEq(c.size("foo"), 5)
+    verifyEq(d.size("foo"), 2)
+    verifyRec(a.get("foo", 1), ["id":1, "a":12, "b":"foo",        "c":false])
+    verifyRec(b.get("foo", 1), ["id":1, "a":12, "b":"foo",        "c":false])
+    verifyRec(c.get("foo", 1), ["id":1, "a":77, "b":"cool beans", "c":false])
+    verifyEq( d.get("foo", 1), null)
   }
 }
