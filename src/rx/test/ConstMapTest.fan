@@ -54,6 +54,9 @@
     verifyEq(a.get(8), null)
     verifyEq(b.get(8), null)
     verifyEq(c.get(8), false)
+
+    // not immutable
+    verifyErr(NotImmutableErr#) { c.set(10, [1,2,3]) }
   }
 
   Void testSetKeys()

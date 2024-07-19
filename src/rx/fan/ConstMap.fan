@@ -62,6 +62,8 @@
   @Operator
   ConstMap set(Int id, Obj val)
   {
+    if (!val.isImmutable) throw NotImmutableErr("Value not immutable '${val}'")
+
     key := id
     addedLeaf := Box(null)
     RNode newroot := (root == null ? BitmapIndexedNode.empty : root)
