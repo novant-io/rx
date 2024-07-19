@@ -21,10 +21,12 @@
     verifyEq(test, dumb)
   }
 
-  protected Void verifyBucket(RxBucket b, [Str:Obj?][] expect)
-  {
-    verifyEq(b.isEmpty, expect.size == 0)
-    verifyEq(b.size, expect.size)
-    expect.each |er,i| { verifyRec(b[i], er) }
-  }
+  // protected Void verifyBucket(RxStore store, Str name, [Str:Obj?][] expect)
+  // {
+  //   expect.each |er,i|
+  //   {
+  //     tr := store.get(name, i) // FUCK! name, er["id"])
+  //     verifyRec(tr, er)
+  //   }
+  // }
 }
