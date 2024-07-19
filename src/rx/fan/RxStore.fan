@@ -12,18 +12,37 @@ using concurrent
 ** RxStore
 *************************************************************************
 
-** RxStore manages a set of buckets that each contain a list of records.
+**
+** RxStore manages an immutable set of buckets that each contain
+** a list of records.  To modify the contents of Store, create
+** a RxWriter to apply a set of changes which produces a new
+** Store instance.  No data from previous instances is modified
+** so each Store can be used safely between threads.
+**
 @Js const class RxStore
 {
   ** Create a new store and register given buckets.
   new make(Str:RxRec[] buckets := [:])
   {
-    state := RxStoreState(buckets)
-    this.stateRef = AtomicRef(state)
+    map := Str:ConstMap[:]
+    buckets.each |recs, name|
+    {
+      // TODO: efficient way to pre-seed map?
+      c := ConstMap()
+      recs.each |r| { c = c.add(r.id, r) }
+      map[name] = c
+    }
+    this.bmap = map.toImmutable
+  }
+
+  ** Internal ctor to create store from a writer commit log.
+  internal new makeWriter(Str:ConstMap wmap)
+  {
+    this.bmap = wmap.toImmutable
   }
 
   ** Return registered buckets for this store.
-  Str[] buckets() { state.bmap.keys }
+  Str[] buckets() { bmap.keys }
 
   ** Get the number of records in given bucket.
   ** Throws 'ArgErr' if bucket not found.
@@ -41,13 +60,13 @@ using concurrent
   ** Get bucket or throw 'ArgErr' if not found.
   private ConstMap b(Str name)
   {
-    state.bmap[name] ?: throw ArgErr("Bucket not found '${name}'")
+    bmap[name] ?: throw ArgErr("Bucket not found '${name}'")
   }
 
-  ** Current store state.
-  private RxStoreState state() { stateRef.val }
-  private const AtomicRef stateRef
+  internal const Str:ConstMap bmap   // map of bucket_name : rec_map
 }
+
+
 
 // TODO
 /*
