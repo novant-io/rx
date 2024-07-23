@@ -1,19 +1,18 @@
 //
 // Copyright (c) 2024, Novant LLC
-// Licensed under the MIT License
+// All Rights Reserved
 //
 // History:
-//   11 Jul 2024  Andy Frank  Creation
+//   23 Jul 2024  Andy Frank  Creation
 //
 
-using concurrent
+using dx
 
 *************************************************************************
-** RxValidator
+** Rx
 *************************************************************************
 
-** RxValidator manages change validiaton for RxRec.
-@Js const class RxValidator
+** Rx manages the 'Rx' runtime within a client instance.
+@Js class Rx
 {
-  // TODO
 }
