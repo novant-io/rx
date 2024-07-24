@@ -14,5 +14,8 @@
 {
   Void testBasics()
   {
+    // empty rx
+    rx := Rx()
+    verifyEq(rx.buckets.size, 0)
   }
 }

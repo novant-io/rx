@@ -16,4 +16,18 @@ using dx
 ** or more 'RxTransform' instances may have been applied.
 @Js mixin RxGrid
 {
+  ** Convenience for `size == 0`
+  abstract Bool isEmpty()
+
+  ** Return number of records in current grid.
+  abstract Int size()
+
+  ** Iterate the recs in this grid.
+  abstract Void each(|DxRec| f)
+
+  ** Currently selected recs in this grid.
+  abstract DxRec[] selected()
+
+  ** Select the given record.
+  abstract Void select(DxRec? rec)
 }
