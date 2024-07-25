@@ -17,12 +17,12 @@ using dx
 @Js class Rx
 {
   ** Init a new Rx runtime.
-  new make(Str:DxRec[] buckets := [:])
+  new make(DxStore store)
   {
-    this.store = DxStore(buckets)
+    this.store = store
   }
 
-  ** Bucket keys for this Rx instance.
+  ** Bucket keys for backing store of this Rx instance.
   Str[] buckets() { store.buckets }
 
   private DxStore store   // backing store instance
