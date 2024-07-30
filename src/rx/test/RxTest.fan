@@ -17,7 +17,7 @@ using dx
   Void testBasics()
   {
     // empty rx
-    rx := Rx(DxStore())
+    rx := Rx(DxStore(1, [:]))
     verifyEq(rx.buckets.size, 0)
   }
 }
