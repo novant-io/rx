@@ -21,6 +21,7 @@ class Build : build::BuildPod
     depends = ["sys 1.0", "util 1.0", "concurrent 1.0", "dx 0+"]
     srcDirs = [
       `fan/`,
+      `fan/impl/`,
       `test/`
     ]
     docApi  = true

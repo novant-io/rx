@@ -28,8 +28,16 @@ using dx
   ** Get the current view for given bucket name.
   RxView view(Str bucket)
   {
-    throw Err("Not yet implemented")
+    view := vmap[bucket]
+    if (view == null)
+    {
+      if (!buckets.contains(bucket))
+        throw ArgErr("Bucket not found '${bucket}'")
+      vmap[bucket] = view = DefRxView(this, bucket)
+    }
+    return view
   }
 
-  private DxStore store   // backing store instance
+  internal DxStore store          // backing store instance
+  private Str:RxView vmap := [:]  // map of bucket:RxView
 }
