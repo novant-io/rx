@@ -9,23 +9,23 @@
 using dx
 
 *************************************************************************
-** RxGrid
+** RxView
 *************************************************************************
 
-** RxGrid models the current view of a data grid where zero
-** or more 'RxTransform' instances may have been applied.
-@Js mixin RxGrid
+** RxView models the current view of a DxStore bucket, where
+** zero or more 'RxTransform' instances may have been applied.
+@Js mixin RxView
 {
   ** Convenience for `size == 0`
   abstract Bool isEmpty()
 
-  ** Return number of records in current grid.
+  ** Return number of records in current view.
   abstract Int size()
 
-  ** Iterate the recs in this grid.
+  ** Iterate the recs in this view.
   abstract Void each(|DxRec| f)
 
-  ** Currently selected recs in this grid.
+  ** Currently selected recs in this view.
   abstract DxRec[] selected()
 
   ** Select the given record.

@@ -25,5 +25,11 @@ using dx
   ** Bucket keys for backing store of this Rx instance.
   Str[] buckets() { store.buckets }
 
+  ** Get the current view for given bucket name.
+  RxView view(Str bucket)
+  {
+    throw Err("Not yet implemented")
+  }
+
   private DxStore store   // backing store instance
 }
