@@ -23,7 +23,8 @@ class Build : build::BuildPod
       "util 1.0",
       "concurrent 1.0",
       "dom 1.0",
-      "dx 0+"
+      "dx 0+",
+      "cam 0+",
     ]
     srcDirs = [
       `fan/`,
