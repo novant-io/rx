@@ -16,9 +16,23 @@ using dx
 ** Rx manages a 'Rx' runtime within a client instance.
 @Js class Rx
 {
-  ** Init a new Rx runtime.
-  new make(DxStore store)
+  ** Get the Rx instance for this browser session.
+  static Rx cur()
   {
+    if (curRef.val == null) curRef.val = Unsafe(Rx.make)
+    return curRef.val->val
+  }
+
+  ** Private ctor.
+  private new make()
+  {
+    this.store = DxStore(0, [:])
+  }
+
+  ** Reload this instance with a new store.
+  Void reload(DxStore store)
+  {
+    // TODO FIXIT: fire modify on old/new buckets
     this.store = store
   }
 
@@ -37,6 +51,9 @@ using dx
     }
     return view
   }
+
+  // session instance
+  private static const AtomicRef curRef := AtomicRef()
 
   internal DxStore store          // backing store instance
   private Str:RxView vmap := [:]  // map of bucket:RxView
