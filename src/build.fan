@@ -9,6 +9,7 @@ class Build : BuildGroup
     childrenScripts =
     [
       `rx/build.fan`,
+      `rxTest/build.fan`,
     ]
   }
 }
