@@ -30,10 +30,11 @@ using dx
   }
 
   ** Reload this instance with a new store.
-  Void reload(DxStore store)
+  This reload(DxStore store)
   {
     // TODO FIXIT: fire modify on old/new buckets
     this.store = store
+    return this
   }
 
   ** Bucket keys for backing store of this Rx instance.
