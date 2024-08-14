@@ -26,6 +26,9 @@ class Build : build::BuildPod
       "dx 0+",
       "cam 0+",
       "rx 0+",
+      "web 1.0",
+      "wisp 1.0",
+      "domkit 1.0",
     ]
     srcDirs = [
       `test/`
