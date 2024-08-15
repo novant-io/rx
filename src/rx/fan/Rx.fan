@@ -16,6 +16,11 @@ using dx
 ** Rx manages a 'Rx' runtime within a client instance.
 @Js class Rx
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
   ** Get the Rx instance for this browser session.
   static Rx cur()
   {
@@ -29,11 +34,17 @@ using dx
     this.store = DxStore(0, [:])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Store
+//////////////////////////////////////////////////////////////////////////
+
   ** Reload this instance with a new store.
   This reload(DxStore store)
   {
     // TODO FIXIT: fire modify on old/new buckets
     this.store = store
+    // TODO FIXIT: yikes
+    fireModify(["*"])
     return this
   }
 
@@ -53,9 +64,39 @@ using dx
     return view
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
+  ** Register a callback when the given bucket is modified.
+  ** Use '"*"' to register callback when _any_ bucket is
+  ** modified.
+  Void onModify(Str bucket, |RxEvent| f)
+  {
+    acc := cbModify[bucket] ?: Func[,]
+    acc.add(f)
+    cbModify[bucket] = acc
+  }
+
+  ** Fire 'onModify' event on the given buckets.
+  private Void fireModify(Str[] buckets)
+  {
+    buckets.each |b|
+    {
+      event := RxEvent()
+      funcs := cbModify[b] ?: Func#.emptyList
+      funcs.each |Func f| { f.call(event) }
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
   // session instance
   private static const AtomicRef curRef := AtomicRef()
 
-  internal DxStore store          // backing store instance
-  private Str:RxView vmap := [:]  // map of bucket:RxView
+  internal DxStore store              // backing store instance
+  private Str:RxView vmap := [:]      // map of bucket:RxView
+  private Str:Func[] cbModify := [:]  // map of bucket : event callbacks
 }

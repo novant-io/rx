@@ -20,12 +20,19 @@ using dx
     rx := Rx.cur
     verifyEq(rx.buckets.size, 0)
 
+    // register events
+    counter := 0
+    rx.onModify("*") { counter++ }
+
     // load some data
     rx.reload(DxStore(1, ["foo":[
       DxRec(["id":1, "a":12, "b":"foo", "c":false]),
       DxRec(["id":2, "a":24, "b":"bar", "c":true]),
       DxRec(["id":3, "a":18, "b":"zar", "c":false]),
     ]]))
+
+    // verify callback
+    verifyEq(counter, 1)
 
     // foo view
     view := rx.view("foo")
