@@ -33,6 +33,13 @@ using dx
     rx.store.size(bucket)
   }
 
+  ** Get record by id from current view or 'null' if not found.
+  override DxRec? get(Int id)
+  {
+    // TODO
+    rx.store.get(bucket, id)
+  }
+
   ** Iterate the recs in this view.
   override Void each(|DxRec| f)
   {

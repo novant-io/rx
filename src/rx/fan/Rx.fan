@@ -38,6 +38,9 @@ using dx
 // Store
 //////////////////////////////////////////////////////////////////////////
 
+  ** Current store instance.
+  DxStore store { private set }
+
   ** Reload this instance with a new store.
   This reload(DxStore store)
   {
@@ -96,7 +99,6 @@ using dx
   // session instance
   private static const AtomicRef curRef := AtomicRef()
 
-  internal DxStore store              // backing store instance
   private Str:RxView vmap := [:]      // map of bucket:RxView
   private Str:Func[] cbModify := [:]  // map of bucket : event callbacks
 }

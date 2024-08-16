@@ -22,6 +22,9 @@ using dx
   ** Return number of records in current view.
   abstract Int size()
 
+  ** Get record by id from current view or 'null' if not found.
+  abstract DxRec? get(Int id)
+
   ** Iterate the recs in this view.
   abstract Void each(|DxRec| f)
 
