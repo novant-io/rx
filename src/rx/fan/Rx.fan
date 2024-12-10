@@ -52,7 +52,7 @@ using dx
   ** Get model for given namespace key. If model does not
   ** exist throws 'ArgErr' or returns 'null' if checked
   ** is false.
-  RxModel? get(Str key, Bool checked := true)
+  RxModel? model(Str key, Bool checked := true)
   {
     model := mmap[key]
     if (model == null && checked)

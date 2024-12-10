@@ -20,14 +20,14 @@ using dx
     rx := Rx.cur
     verifyEq(rx.size, 0)
     verifyEq(rx.keys, Str[,])
-    verifyEq(rx.get("m1", false), null)
-    verifyErr(ArgErr#) { x := rx.get("m1") }
+    verifyEq(rx.model("m1", false), null)
+    verifyErr(ArgErr#) { x := rx.model("m1") }
 
     // init model
     rx.init("m1")
     verifyEq(rx.size, 1)
     verifyEq(rx.keys, ["m1"])
-    m := rx.get("m1")
+    m := rx.model("m1")
     verifyTrue(m is RxModel)
 
     // load some data
