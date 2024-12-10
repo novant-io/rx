@@ -36,10 +36,11 @@ using dx
 //////////////////////////////////////////////////////////////////////////
 
   ** Initialize a new 'RxModel' with given name.
-  This init(Str name)
+  RxModel init(Str name)
   {
-    this.mmap.add(name, RxModel())
-    return this
+    model := RxModel()
+    this.mmap.add(name, model)
+    return model
   }
 
   ** Get number of models in this instance.
