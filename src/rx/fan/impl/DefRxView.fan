@@ -17,9 +17,9 @@ using dx
 @Js internal class DefRxView : RxView
 {
   ** Create a new view.
-  new make(Rx rx, Str bucket)
+  new make(RxModel model, Str bucket)
   {
-    this.rx = rx
+    this.model  = model
     this.bucket = bucket
   }
 
@@ -30,21 +30,21 @@ using dx
   override Int size()
   {
     // TODO
-    rx.store.size(bucket)
+    model.store.size(bucket)
   }
 
   ** Get record by id from current view or 'null' if not found.
   override DxRec? get(Int id)
   {
     // TODO
-    rx.store.get(bucket, id)
+    model.store.get(bucket, id)
   }
 
   ** Iterate the recs in this view.
   override Void each(|DxRec| f)
   {
     // TODO
-    rx.store.each(bucket, f)
+    model.store.each(bucket, f)
   }
 
   ** Currently selected recs in this view.
@@ -60,6 +60,6 @@ using dx
     // TODO
   }
 
-  private Rx rx
+  private RxModel model
   private const Str bucket
 }

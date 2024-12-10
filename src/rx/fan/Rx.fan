@@ -29,67 +29,34 @@ using dx
   }
 
   ** Private ctor.
-  private new make()
-  {
-    this.store = DxStore(0, [:])
-  }
+  private new make() {}
 
 //////////////////////////////////////////////////////////////////////////
-// Store
+// Model
 //////////////////////////////////////////////////////////////////////////
 
-  ** Current store instance.
-  DxStore store { private set }
-
-  ** Reload this instance with a new store.
-  This reload(DxStore store)
+  ** Initialize a new 'RxModel' with given name.
+  This init(Str name)
   {
-    // TODO FIXIT: fire modify on old/new buckets
-    this.store = store
-    // TODO FIXIT: yikes
-    fireModify(["*"])
+    this.mmap.add(name, RxModel())
     return this
   }
 
-  ** Bucket keys for backing store of this Rx instance.
-  Str[] buckets() { store.buckets }
+  ** Get number of models in this instance.
+  Int size() { mmap.size }
 
-  ** Get the current view for given bucket name.
-  RxView view(Str bucket)
+  ** Get namespace keys for installed models.
+  Str[] keys() { mmap.keys }
+
+  ** Get model for given namespace key. If model does not
+  ** exist throws 'ArgErr' or returns 'null' if checked
+  ** is false.
+  RxModel? get(Str key, Bool checked := true)
   {
-    view := vmap[bucket]
-    if (view == null)
-    {
-      if (!buckets.contains(bucket))
-        throw ArgErr("Bucket not found '${bucket}'")
-      vmap[bucket] = view = DefRxView(this, bucket)
-    }
-    return view
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Events
-//////////////////////////////////////////////////////////////////////////
-
-  ** Register a callback when the given bucket is modified.
-  ** Use '"*"' to register callback when _any_ bucket is
-  ** modified.
-  Void onModify(Str bucket, |RxEvent| f)
-  {
-    acc := cbModify[bucket] ?: Func[,]
-    acc.add(f)
-    cbModify[bucket] = acc
-  }
-
-  ** Fire 'onModify' event on the given buckets.
-  private Void fireModify(Str[] buckets)
-  {
-    buckets.each |b|
-    {
-      event := RxEvent()
-      funcs := cbModify[b] ?: Func#.emptyList
-      funcs.each |Func f| { f.call(event) }
-    }
+    model := mmap[key]
+    if (model == null && checked)
+      throw ArgErr("Model not found '${key}'")
+    return model
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,6 +66,5 @@ using dx
   // session instance
   private static const AtomicRef curRef := AtomicRef()
 
-  private Str:RxView vmap := [:]      // map of bucket:RxView
-  private Str:Func[] cbModify := [:]  // map of bucket : event callbacks
+  private Str:RxModel mmap := [:]  // map of name:RxModel
 }

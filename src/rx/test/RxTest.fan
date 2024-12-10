@@ -18,24 +18,34 @@ using dx
   {
     // init empty rx
     rx := Rx.cur
-    verifyEq(rx.buckets.size, 0)
+    verifyEq(rx.size, 0)
+    verifyEq(rx.keys, Str[,])
+    verifyEq(rx.get("m1", false), null)
+    verifyErr(ArgErr#) { x := rx.get("m1") }
 
-    // register events
-    counter := 0
-    rx.onModify("*") { counter++ }
+    // init model
+    rx.init("m1")
+    verifyEq(rx.size, 1)
+    verifyEq(rx.keys, ["m1"])
+    m := rx.get("m1")
+    verifyTrue(m is RxModel)
 
     // load some data
-    rx.reload(DxStore(1, ["foo":[
+    m.reload(DxStore(1, ["foo":[
       DxRec(["id":1, "a":12, "b":"foo", "c":false]),
       DxRec(["id":2, "a":24, "b":"bar", "c":true]),
       DxRec(["id":3, "a":18, "b":"zar", "c":false]),
     ]]))
 
-    // verify callback
-    verifyEq(counter, 1)
+    // // register events
+    // counter := 0
+    // rx.onModify("*") { counter++ }
+
+    // // verify callback
+    // verifyEq(counter, 1)
 
     // foo view
-    view := rx.view("foo")
+    view := m.view("foo")
     verifyEq(view.isEmpty, false)
     verifyEq(view.size, 3)
   }
