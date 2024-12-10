@@ -23,6 +23,7 @@ using dx
     this.bucket = bucket
     // TODO FIXIT
     this.model.store.each(bucket) |r| { rindex.add(r.id) }
+    rindex.sort
   }
 
   ** Convenience for `size == 0`
