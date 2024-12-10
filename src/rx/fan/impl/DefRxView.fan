@@ -21,6 +21,8 @@ using dx
   {
     this.model  = model
     this.bucket = bucket
+    // TODO FIXIT
+    this.model.store.each(bucket) |r| { rindex.add(r.id) }
   }
 
   ** Convenience for `size == 0`
@@ -31,6 +33,14 @@ using dx
   {
     // TODO
     model.store.size(bucket)
+  }
+
+  ** Get record at the given index from current view.
+  override DxRec at(Int index)
+  {
+    // TODO
+    id := rindex[index]
+    return model.store.get(bucket, id)
   }
 
   ** Get record by id from current view or 'null' if not found.
@@ -62,4 +72,5 @@ using dx
 
   private RxModel model
   private const Str bucket
+  private Int[] rindex := [,]  // row_index : rec_id index
 }

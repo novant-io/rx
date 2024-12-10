@@ -22,6 +22,9 @@ using dx
   ** Return number of records in current view.
   abstract Int size()
 
+  ** Get record at the given index from current view.
+  abstract DxRec at(Int index)
+
   ** Get record by id from current view or 'null' if not found.
   abstract DxRec? get(Int id)
 
