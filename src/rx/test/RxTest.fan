@@ -28,7 +28,8 @@ using dx
     verifyEq(rx.size, 1)
     verifyEq(rx.keys, ["m1"])
     m := rx.model("m1")
-    verifyTrue(m is RxModel)
+    verifyNotNull(m)
+    verifyEq(m.loaded, false)
 
     // load some data
     m.reload(DxStore(1, ["foo":[
@@ -36,6 +37,7 @@ using dx
       DxRec(["id":2, "a":24, "b":"bar", "c":true]),
       DxRec(["id":3, "a":18, "b":"zar", "c":false]),
     ]]))
+    verifyEq(m.loaded, true)
 
     // // register events
     // counter := 0

@@ -34,11 +34,15 @@ using dx
   ** Current store instance.
   DxStore store { private set }
 
+  ** Has this model been loaded with data yet?
+  Bool loaded := false { private set }
+
   ** Reload this instance with a new store.
   This reload(DxStore store)
   {
     // TODO FIXIT: fire modify on old/new buckets
     this.store = store
+    this.loaded = true
     // TODO FIXIT: yikes
     fireModify(["*"])
     return this
