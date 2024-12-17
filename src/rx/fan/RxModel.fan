@@ -64,6 +64,16 @@ using dx
     return view
   }
 
+  ** Add a transform to view for given bucket.
+  Void addTransform(Str bucket, RxTransform t)
+  {
+    // sanity check or bind
+    if (t.model != null) throw ArgErr("Transform already bound to model")
+    t.model = this
+
+    // TODO FIXIT
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////

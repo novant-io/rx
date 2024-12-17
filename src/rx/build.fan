@@ -29,6 +29,7 @@ class Build : build::BuildPod
     srcDirs = [
       `fan/`,
       `fan/impl/`,
+      `fan/transforms/`,
       `test/`
     ]
     docApi  = true

@@ -10,7 +10,11 @@
 ** RxTransform
 *************************************************************************
 
-** RxTransform mutates the view of a 'RxGrid'.
-@Js mixin RxTransform
+** RxTransform mutates the view of a 'RxView'.
+@Js abstract class RxTransform
 {
+  ** Fire event that this transform was modified and
+  ** corresponding view needs to be updated.
+  protected Void fireModify() { /*model?.recomputeView*/ }
+  internal RxModel? model
 }
