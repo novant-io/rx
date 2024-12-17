@@ -79,11 +79,26 @@ using dx
       // sort primary col
       pa := ra.get(pcol)
       pb := rb.get(pcol)
-      return pa <=> pb
+      pr := RxUtil.sort(pa, pb)
+
+      // if pa == pb then secondary sort
+      if (pr == 0 && scol != null)
+      {
+        sa := ra.get(scol)
+        sb := rb.get(scol)
+        return RxUtil.sort(sa, sb)
+      }
+
+      return pr
     }
 
     // // reverse sort if needed
     // if (dir == "down") index = index.reverse
+
+    // notify
+// TODO FIXIT
+    // model.fireModify([bucket])
+    model.fireModify(["*"])
   }
 
   ** Clear selection state.

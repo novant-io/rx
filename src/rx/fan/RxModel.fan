@@ -79,7 +79,7 @@ using dx
   }
 
   ** Fire 'onModify' event on the given buckets.
-  private Void fireModify(Str[] buckets)
+  internal Void fireModify(Str[] buckets)
   {
     buckets.each |b|
     {
