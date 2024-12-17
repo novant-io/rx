@@ -36,4 +36,7 @@ using dx
 
   ** Select the given record.
   abstract Void select(DxRec? rec)
+
+  ** Sort given view by column and optional secondary column.
+  abstract Void sort(Str pcol, Str? scol := null)
 }

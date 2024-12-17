@@ -22,11 +22,22 @@ using dx
     verifyEq(test, dumb)
   }
 
-  protected Void verifyView(RxModel model, Str bucket, [Str:Obj?][] expect)
+  protected Void verifyView(RxView view, [Str:Obj?][] expect)
   {
     index := 0
-    view  := model.view(bucket)
     verifyEq(view.size, expect.size)
     view.each |test| { verifyRec(test, expect[index++]) }
   }
+
+  protected Void verifyViewCols(RxView view, Str[] cols, [Str:Obj?][] expect)
+  {
+    index := 0
+    verifyEq(view.size, expect.size)
+    view.each |test|
+    {
+      x := expect[index++]
+      cols.each |c| { verifyEq(test.get(c), x.get(c)) }
+    }
+  }
+
 }

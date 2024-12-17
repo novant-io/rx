@@ -38,23 +38,20 @@ using dx
   ** Get record at the given index from current view.
   override DxRec at(Int index)
   {
-    // TODO
     id := rindex[index]
-    return model.store.get(bucket, id)
+    return this.get(id)
   }
 
   ** Get record by id from current view or 'null' if not found.
   override DxRec? get(Int id)
   {
-    // TODO
     model.store.get(bucket, id)
   }
 
   ** Iterate the recs in this view.
   override Void each(|DxRec| f)
   {
-    // TODO
-    model.store.each(bucket, f)
+    rindex.each |id| { f(this.get(id)) }
   }
 
   ** Currently selected recs in this view.
@@ -70,7 +67,36 @@ using dx
     // TODO
   }
 
+  ** Sort given view by column and optional secondary column.
+  override Void sort(Str pcol, Str? scol := null)
+  {
+    rindex.sort |ida, idb|
+    {
+      // get recs
+      ra := this.get(ida)
+      rb := this.get(idb)
+
+      // sort primary col
+      pa := ra.get(pcol)
+      pb := rb.get(pcol)
+      return pa <=> pb
+    }
+
+    // // reverse sort if needed
+    // if (dir == "down") index = index.reverse
+  }
+
+  ** Clear selection state.
+  private Void clearSel()
+  {
+    // TODO FIXIT
+    // sel.clear
+  }
+
   private RxModel model
   private const Str bucket
-  private Int[] rindex := [,]  // row_index : rec_id index
+
+  // row_index where array position is view row index
+  // and cell value is the correspoding rec_id
+  private Int[] rindex := [,]
 }
