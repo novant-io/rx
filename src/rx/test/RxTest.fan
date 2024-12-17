@@ -16,6 +16,9 @@ using dx
 {
   Void testBasics()
   {
+    // force clear
+    Rx.cur.clear
+
     // init empty rx
     rx := Rx.cur
     verifyEq(rx.size, 0)
@@ -31,6 +34,10 @@ using dx
     verifyNotNull(m)
     verifyEq(m.loaded, false)
 
+    // register events
+    counter := 0
+    m.onModify("*") { counter++ }
+
     // load some data
     m.reload(DxStore(1, ["foo":[
       DxRec(["id":1, "a":12, "b":"foo", "c":false]),
@@ -39,12 +46,8 @@ using dx
     ]]))
     verifyEq(m.loaded, true)
 
-    // // register events
-    // counter := 0
-    // rx.onModify("*") { counter++ }
-
-    // // verify callback
-    // verifyEq(counter, 1)
+    // verify callback
+    verifyEq(counter, 1)
 
     // foo view
     view := m.view("foo")
@@ -52,5 +55,12 @@ using dx
     verifyEq(view.size, 3)
     verifyEq(view.get(1)->a, 12)
     verifyEq(view.at(0)->a,  12)
+
+    // remove model
+    rx.remove("m1")
+    verifyEq(rx.size, 0)
+    verifyEq(rx.keys, Str[,])
+    verifyEq(rx.model("m1", false), null)
+    verifyErr(ArgErr#) { x := rx.model("m1") }
   }
 }
