@@ -51,14 +51,20 @@ using dx
   ** Bucket keys for backing store of this Rx instance.
   Str[] buckets() { store.buckets }
 
-  ** Get the current view for given bucket name.
-  RxView view(Str bucket)
+  ** Get the current view for given bucket name.  If bucket not
+  ** found and 'checked' is true, then throws 'ArgErr', or if
+  ** checked is false return an empty RxView instance.
+  RxView view(Str bucket, Bool checked := true)
   {
     view := vmap[bucket]
     if (view == null)
     {
       if (!buckets.contains(bucket))
-        throw ArgErr("Bucket not found '${bucket}'")
+      {
+        // NOTE: we do not cache the empty rx instance
+        if (checked) throw ArgErr("Bucket not found '${bucket}'")
+        return EmptyRxView.defVal
+      }
       vmap[bucket] = view = DefRxView(this, bucket)
     }
     return view

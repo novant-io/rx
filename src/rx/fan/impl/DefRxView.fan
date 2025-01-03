@@ -116,13 +116,6 @@ using dx
     model.fireModify(["*"])
   }
 
-  ** Clear selection state.
-  private Void clearSel()
-  {
-    // TODO FIXIT
-    // sel.clear
-  }
-
   private RxModel model
   private const Str bucket
 

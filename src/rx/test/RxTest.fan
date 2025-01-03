@@ -34,6 +34,12 @@ using dx
     verifyNotNull(m)
     verifyEq(m.loaded, false)
 
+    // verify no bucket
+    verifyErr(ArgErr#) { x := m.view("foo") }
+    verifyEq(m.view("foo", false), EmptyRxView.defVal)
+    verifyEq(m.view("foo", false).size, 0)
+    verifyErr(ArgErr#) { x := m.view("foo") }  // verify not cached
+
     // register events
     counter := 0
     m.onModify("*") { counter++ }
