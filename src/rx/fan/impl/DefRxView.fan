@@ -54,18 +54,24 @@ using dx
     rindex.each |id| { f(this.get(id)) }
   }
 
-  ** Currently selected recs in this view.
-  override DxRec[] selected() { smap.vals }
-
   ** Select the given record.
-  override Void select(DxRec? rec)
+  override Void select(DxRec rec)
   {
     smap[rec.id] = rec
     // TODO: fire select event handler
   }
 
+  ** Return 'true' if given record is selected.
+  override Bool selected(DxRec rec)
+  {
+    smap.containsKey(rec.id)
+  }
+
+  ** Currently selected recs in this view.
+  override DxRec[] selection() { smap.vals }
+
   ** Clear all selection from this view.
-  override Void selectClear()
+  override Void selectionClear()
   {
     smap.clear
     // TODO: fire select event handler
