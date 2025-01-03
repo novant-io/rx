@@ -35,6 +35,7 @@ using dx
 
     // verify no selection
     verifyEq(v.size, 100)
+    verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
     verifyEq(v.selected(r1), false)
     verifyEq(v.selected(r2), false)
@@ -43,6 +44,7 @@ using dx
 
     // select a record
     v.select(r1)
+    verifyEq(v.selectionSize,  1)
     verifyEq(v.selection.size, 1)
     verifyEq(v.selection[0], r1)
     verifyEq(v.selected(r1), true)
@@ -52,6 +54,7 @@ using dx
 
     // verify re-select no-op
     v.select(r1)
+    verifyEq(v.selectionSize,  1)
     verifyEq(v.selection.size, 1)
     verifyEq(v.selection[0], r1)
     verifyEq(v.selected(r1), true)
@@ -63,6 +66,7 @@ using dx
     v.select(r2)
     v.select(r3)
     v.select(r4)
+    verifyEq(v.selectionSize,  4)
     verifyEq(v.selection.size, 4)
     s := v.selection.sort |a,b| { a.id <=> b.id }
     verifyEq(s[0], r1)
@@ -76,6 +80,7 @@ using dx
 
     // clear selection
     v.selectionClear
+    verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
     verifyEq(v.selected(r1), false)
     verifyEq(v.selected(r2), false)

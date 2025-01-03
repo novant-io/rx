@@ -40,6 +40,9 @@ using dx
   ** Currently selected recs in this view.
   abstract DxRec[] selection()
 
+  ** Get number of selected records.
+  abstract Int selectionSize()
+
   ** Clear all selection from this view.
   abstract Void selectionClear()
 

@@ -70,6 +70,9 @@ using dx
   ** Currently selected recs in this view.
   override DxRec[] selection() { smap.vals }
 
+  ** Get number of selected records.
+  override Int selectionSize() { smap.size }
+
   ** Clear all selection from this view.
   override Void selectionClear()
   {
