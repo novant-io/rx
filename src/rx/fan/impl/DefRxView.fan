@@ -55,16 +55,20 @@ using dx
   }
 
   ** Currently selected recs in this view.
-  override DxRec[] selected()
-  {
-    // TODO
-    DxRec#.emptyList
-  }
+  override DxRec[] selected() { smap.vals }
 
   ** Select the given record.
   override Void select(DxRec? rec)
   {
-    // TODO
+    smap[rec.id] = rec
+    // TODO: fire select event handler
+  }
+
+  ** Clear all selection from this view.
+  override Void clearSelected()
+  {
+    smap.clear
+    // TODO: fire select event handler
   }
 
   ** Sort given view by column and optional secondary column.
@@ -114,4 +118,7 @@ using dx
   // row_index where array position is view row index
   // and cell value is the correspoding rec_id
   private Int[] rindex := [,]
+
+  // selection map
+  private Int:DxRec smap := [:]
 }
