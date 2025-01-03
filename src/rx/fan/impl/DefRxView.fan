@@ -59,7 +59,7 @@ using dx
   {
     if (select) smap[rec.id] = rec
     else smap.remove(rec.id)
-    // TODO: fire select event handler
+    fireSelect
   }
 
   ** Select or deselect all records in view.
@@ -67,7 +67,7 @@ using dx
   {
     if (select) each |r| { smap[r.id] = r }
     else smap.clear
-    // TODO: fire select event handler
+    fireSelect
   }
 
   ** Return 'true' if given record is selected.
@@ -115,6 +115,9 @@ using dx
     // model.fireModify([bucket])
     model.fireModify(["*"])
   }
+
+  // Invoke model.fireSelect event
+  private Void fireSelect() { model.fireSelect([bucket]) }
 
   private RxModel model
   private const Str bucket

@@ -74,6 +74,16 @@ using dx
 // Events
 //////////////////////////////////////////////////////////////////////////
 
+  ** Register a callback when the given bucket selection is
+  ** modified. Use '"*"' to register callback when _any_
+  ** bucket selection changes.
+  Void onSelect(Str bucket, |RxEvent| f)
+  {
+    acc := cbSelect[bucket] ?: Func[,]
+    acc.add(f)
+    cbSelect[bucket] = acc
+  }
+
   ** Register a callback when the given bucket is modified.
   ** Use '"*"' to register callback when _any_ bucket is
   ** modified.
@@ -84,13 +94,25 @@ using dx
     cbModify[bucket] = acc
   }
 
+  ** Fire 'onSelect' event on the given buckets.
+  internal Void fireSelect(Str[] buckets)
+  {
+    fireEvent(buckets, cbSelect)
+  }
+
   ** Fire 'onModify' event on the given buckets.
   internal Void fireModify(Str[] buckets)
+  {
+    fireEvent(buckets, cbModify)
+  }
+
+  ** Fire event on given buckets and event handlers.
+  private Void fireEvent(Str[] buckets, Str:Func[] cb)
   {
     buckets.each |b|
     {
       event := RxEvent()
-      funcs := cbModify[b] ?: Func#.emptyList
+      funcs := cb[b] ?: Func#.emptyList
       funcs.each |Func f| { f.call(event) }
     }
   }
@@ -100,5 +122,6 @@ using dx
 //////////////////////////////////////////////////////////////////////////
 
   private Str:RxView vmap := [:]      // map of bucket:RxView
+  private Str:Func[] cbSelect := [:]  // map of bucket : event callbacks
   private Str:Func[] cbModify := [:]  // map of bucket : event callbacks
 }

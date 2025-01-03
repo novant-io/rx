@@ -26,6 +26,8 @@ using dx
     // init rx
     m := Rx.cur.init("m1").reload(dx)
     v := m.view("b1")
+    c := 0
+    m.onSelect("b1") { c++ }
 
     // recs
     r1 := v.get(5)
@@ -34,6 +36,7 @@ using dx
     r4 := v.get(99)
 
     // verify no selection
+    verifyEq(c, 0)
     verifyEq(v.size, 100)
     verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
@@ -44,6 +47,7 @@ using dx
 
     // select a record
     v.select(r1)
+    verifyEq(c, 1)
     verifyEq(v.selectionSize,  1)
     verifyEq(v.selection.size, 1)
     verifyEq(v.selection[0], r1)
@@ -54,6 +58,7 @@ using dx
 
     // verify re-select no-op
     v.select(r1)
+    verifyEq(c, 2)  // NOTE: still fires event
     verifyEq(v.selectionSize,  1)
     verifyEq(v.selection.size, 1)
     verifyEq(v.selection[0], r1)
@@ -64,6 +69,7 @@ using dx
 
     // deselect
     v.select(r1, false)
+    verifyEq(c, 3)
     verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
     verifyEq(v.selected(r1), false)
@@ -75,6 +81,7 @@ using dx
     v.select(r2)
     v.select(r3)
     v.select(r4)
+    verifyEq(c, 6)
     verifyEq(v.selectionSize,  3)
     verifyEq(v.selection.size, 3)
     s := v.selection.sort |a,b| { a.id <=> b.id }
@@ -88,6 +95,7 @@ using dx
 
     // clear selection
     v.selectAll(false)
+    verifyEq(c, 7)
     verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
     verifyEq(v.selected(r1), false)
@@ -97,9 +105,11 @@ using dx
 
     // select all
     v.selectAll
+    verifyEq(c, 8)
     verifyEq(v.selectionSize,  100)
     verifyEq(v.selection.size, 100)
     v.selectAll(false)
+    verifyEq(c, 9)
     verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
   }
