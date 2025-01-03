@@ -54,10 +54,19 @@ using dx
     rindex.each |id| { f(this.get(id)) }
   }
 
-  ** Select the given record.
-  override Void select(DxRec rec)
+  ** Select or deselect the given record.
+  override Void select(DxRec rec, Bool select := true)
   {
-    smap[rec.id] = rec
+    if (select) smap[rec.id] = rec
+    else smap.remove(rec.id)
+    // TODO: fire select event handler
+  }
+
+  ** Select or deselect all records in view.
+  override Void selectAll(Bool select := true)
+  {
+    if (select) each |r| { smap[r.id] = r }
+    else smap.clear
     // TODO: fire select event handler
   }
 
@@ -72,13 +81,6 @@ using dx
 
   ** Get number of selected records.
   override Int selectionSize() { smap.size }
-
-  ** Clear all selection from this view.
-  override Void selectionClear()
-  {
-    smap.clear
-    // TODO: fire select event handler
-  }
 
   ** Sort given view by column and optional secondary column.
   override Void sort(Str pcol, Str? scol := null)

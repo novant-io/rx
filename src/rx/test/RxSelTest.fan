@@ -62,29 +62,45 @@ using dx
     verifyEq(v.selected(r3), false)
     verifyEq(v.selected(r4), false)
 
-    // select a few more
-    v.select(r2)
-    v.select(r3)
-    v.select(r4)
-    verifyEq(v.selectionSize,  4)
-    verifyEq(v.selection.size, 4)
-    s := v.selection.sort |a,b| { a.id <=> b.id }
-    verifyEq(s[0], r1)
-    verifyEq(s[1], r2)
-    verifyEq(s[2], r3)
-    verifyEq(s[3], r4)
-    verifyEq(v.selected(r1), true)
-    verifyEq(v.selected(r2), true)
-    verifyEq(v.selected(r3), true)
-    verifyEq(v.selected(r4), true)
-
-    // clear selection
-    v.selectionClear
+    // deselect
+    v.select(r1, false)
     verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
     verifyEq(v.selected(r1), false)
     verifyEq(v.selected(r2), false)
     verifyEq(v.selected(r3), false)
     verifyEq(v.selected(r4), false)
+
+    // select a few more
+    v.select(r2)
+    v.select(r3)
+    v.select(r4)
+    verifyEq(v.selectionSize,  3)
+    verifyEq(v.selection.size, 3)
+    s := v.selection.sort |a,b| { a.id <=> b.id }
+    verifyEq(s[0], r2)
+    verifyEq(s[1], r3)
+    verifyEq(s[2], r4)
+    verifyEq(v.selected(r1), false)
+    verifyEq(v.selected(r2), true)
+    verifyEq(v.selected(r3), true)
+    verifyEq(v.selected(r4), true)
+
+    // clear selection
+    v.selectAll(false)
+    verifyEq(v.selectionSize,  0)
+    verifyEq(v.selection.size, 0)
+    verifyEq(v.selected(r1), false)
+    verifyEq(v.selected(r2), false)
+    verifyEq(v.selected(r3), false)
+    verifyEq(v.selected(r4), false)
+
+    // select all
+    v.selectAll
+    verifyEq(v.selectionSize,  100)
+    verifyEq(v.selection.size, 100)
+    v.selectAll(false)
+    verifyEq(v.selectionSize,  0)
+    verifyEq(v.selection.size, 0)
   }
 }

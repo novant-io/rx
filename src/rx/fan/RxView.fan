@@ -31,8 +31,11 @@ using dx
   ** Iterate the recs in this view.
   abstract Void each(|DxRec| f)
 
-  ** Select the given record.
-  abstract Void select(DxRec rec)
+  ** Select or deselect the given record.
+  abstract Void select(DxRec rec, Bool select := true)
+
+  ** Select or deselect all records in view.
+  abstract Void selectAll(Bool select := true)
 
   ** Return 'true' if given record is selected.
   abstract Bool selected(DxRec rec)
@@ -42,9 +45,6 @@ using dx
 
   ** Get number of selected records.
   abstract Int selectionSize()
-
-  ** Clear all selection from this view.
-  abstract Void selectionClear()
 
   ** Sort given view by column and optional secondary column.
   abstract Void sort(Str pcol, Str? scol := null)
