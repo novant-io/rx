@@ -38,7 +38,7 @@ using dx
   abstract Void select(DxRec? rec)
 
   ** Clear all selection from this view.
-  abstract Void clearSelected()
+  abstract Void selectClear()
 
   ** Sort given view by column and optional secondary column.
   abstract Void sort(Str pcol, Str? scol := null)

@@ -57,7 +57,7 @@ using dx
     verifyEq(s[3], r4)
 
     // clear selection
-    v.clearSelected
+    v.selectClear
     verifyEq(v.selected.size, 0)
   }
 }

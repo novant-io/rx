@@ -65,7 +65,7 @@ using dx
   }
 
   ** Clear all selection from this view.
-  override Void clearSelected()
+  override Void selectClear()
   {
     smap.clear
     // TODO: fire select event handler
