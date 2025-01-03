@@ -40,10 +40,8 @@ using dx
   ** Reload this instance with a new store.
   This reload(DxStore store)
   {
-    // TODO FIXIT: fire modify on old/new buckets
     this.store = store
     this.loaded = true
-    // TODO FIXIT: yikes
     fireModify(["*"])
     return this
   }
