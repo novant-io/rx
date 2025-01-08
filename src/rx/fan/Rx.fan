@@ -79,7 +79,7 @@ using dx
     else
     {
       echo("ERR: ${err}")
-      msg := err["msg"] ?: "An unexpected error occured"
+      msg := err["msg"] ?: "An unexpected error occurred"
       Win.cur.alert(msg)
     }
   }
