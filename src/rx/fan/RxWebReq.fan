@@ -101,7 +101,7 @@ using util
       err.trace
 
       // try to parse response if available
-      map := parseJson(res.content, false) ?: ["error":true, "msg":"Unknown error"]
+      map := parseJson(res.content, false) ?: ["error":true, "msg":"An unexpected error occured"]
       cbErr.call(map)
     }
   }
