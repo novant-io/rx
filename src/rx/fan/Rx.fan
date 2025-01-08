@@ -7,6 +7,7 @@
 //
 
 using concurrent
+using dom
 using dx
 
 *************************************************************************
@@ -66,6 +67,23 @@ using dx
   ** Clear all models.
   Void clear() { mmap.clear }
 
+  ** Error handler for Rx-related errors.
+  Void onErr(|Str:Obj? err| f) { this.cbErr = f }
+
+  // TODO: not sure how this works yet; how do we wrap native
+  // and 'Err' instances; or do we always require a Map?
+  internal Void fireErr(Str:Obj? err)
+  {
+    // route to handler or default to alert
+    if (cbErr != null) cbErr(err)
+    else
+    {
+      echo("ERR: ${err}")
+      msg := err["msg"] ?: "Unknown error"
+      Win.cur.alert(msg)
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -74,4 +92,5 @@ using dx
   private static const AtomicRef curRef := AtomicRef()
 
   private Str:RxModel mmap := [:]  // map of name:RxModel
+  private Func? cbErr              // onerr handler
 }

@@ -74,12 +74,7 @@ using util
 
   ** Callback when req fails with response data if availabe.
   This onErr(|Str:Obj?| f) { this.cbErr = f; return this }
-  private Func cbErr := |Str:Obj? err|
-  {
-    echo("ERR: ${err}")
-    msg := err["msg"] ?: "Unknown error"
-    Win.cur.alert(msg)
-  }
+  private Func cbErr := |Str:Obj? err| { Rx.cur.fireErr(err) }
 
   ** Resolve future.
   internal Void resolve(HttpRes res)
