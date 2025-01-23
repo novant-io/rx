@@ -116,6 +116,12 @@ using dx
     model.fireModify(["*"])
   }
 
+  ** Group given view by column.
+  override Void group(Str col)
+  {
+    // TODO FIXIT
+  }
+
   // Invoke model.fireSelect event
   private Void fireSelect() { model.fireSelect([bucket]) }
 

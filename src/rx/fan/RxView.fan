@@ -48,4 +48,7 @@ using dx
 
   ** Sort given view by column and optional secondary column.
   abstract Void sort(Str pcol, Str? scol := null)
+
+  ** Group given view by column.
+  abstract Void group(Str col)
 }
