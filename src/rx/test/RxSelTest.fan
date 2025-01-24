@@ -30,10 +30,10 @@ using dx
     m.onSelect("b1") { c++ }
 
     // recs
-    r1 := v.get(5)
-    r2 := v.get(9)
-    r3 := v.get(62)
-    r4 := v.get(99)
+    r1 := v.getId(5)
+    r2 := v.getId(9)
+    r3 := v.getId(62)
+    r4 := v.getId(99)
 
     // verify no selection
     verifyEq(c, 0)

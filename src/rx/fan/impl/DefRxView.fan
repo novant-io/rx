@@ -45,7 +45,7 @@ using dx
   override DxRec getAt(Int index)
   {
     id := rindex[index]
-    return this.get(id)
+    return this.getId(id)
   }
 
   ** Get record by id from current view or 'null' if not found.
@@ -67,7 +67,7 @@ using dx
   ** Iterate the recs in this view.
   override Void each(|DxRec| f)
   {
-    rindex.each |id| { f(this.get(id)) }
+    rindex.each |id| { f(this.getId(id)) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -179,8 +179,8 @@ using dx
     return list.sort |ida, idb|
     {
       // get recs
-      ra := this.get(ida)
-      rb := this.get(idb)
+      ra := this.getId(ida)
+      rb := this.getId(idb)
 
       // sort primary col
       pa := ra.get(spcol)

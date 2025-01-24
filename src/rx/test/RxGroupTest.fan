@@ -64,12 +64,12 @@ using dx
     ])
 
     // verify getAt
-    verifyRec(v.at(0), ["id":0xffff_ffff, "name":"east_coast"])
-    verifyRec(v.at(1), ["id":1,  "name":"Jay Gatsby",     "state":"NY"])
-    verifyRec(v.at(2), ["id":3,  "name":"Mark Scout",     "state":"NJ"])
-    verifyRec(v.at(3), ["id":4,  "name":"Barney Stinson", "state":"NY"])
-    verifyRec(v.at(4), ["id":0xffff_ffff, "name":"west_coast"])
-    verifyRec(v.at(5), ["id":2,  "name":"Ron Burgundy",   "state":"CA"])
+    verifyRec(v.getAt(0), ["id":0xffff_ffff, "name":"east_coast"])
+    verifyRec(v.getAt(1), ["id":1,  "name":"Jay Gatsby",     "state":"NY"])
+    verifyRec(v.getAt(2), ["id":3,  "name":"Mark Scout",     "state":"NJ"])
+    verifyRec(v.getAt(3), ["id":4,  "name":"Barney Stinson", "state":"NY"])
+    verifyRec(v.getAt(4), ["id":0xffff_ffff, "name":"west_coast"])
+    verifyRec(v.getAt(5), ["id":2,  "name":"Ron Burgundy",   "state":"CA"])
 
     // add sort
     v.sort("name")
