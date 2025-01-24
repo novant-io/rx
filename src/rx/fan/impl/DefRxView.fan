@@ -21,7 +21,8 @@ using dx
   {
     this.model  = model
     this.bucket = bucket
-    // TODO FIXIT
+
+    // init rindex based on natural bucket order
     this.model.store.each(bucket) |r| { rindex.add(r.id) }
   }
 
@@ -29,11 +30,7 @@ using dx
   override Bool isEmpty() { this.size == 0 }
 
   ** Return number of records in current view.
-  override Int size()
-  {
-    // TODO
-    model.store.size(bucket)
-  }
+  override Int size() { rindex.size }
 
   ** Get record at the given index from current view.
   override DxRec at(Int index)
@@ -45,7 +42,17 @@ using dx
   ** Get record by id from current view or 'null' if not found.
   override DxRec? get(Int id)
   {
-    model.store.get(bucket, id)
+    if (id < 0)
+    {
+      // we use a place holder ID here which is the max
+      // value supported by DxRec; it will not be unique
+      g := gnames[id.negate - 1]
+      return DxRec(["id":0xffff_ffff, "name":g])
+    }
+    else
+    {
+      return model.store.get(bucket, id)
+    }
   }
 
   ** Iterate the recs in this view.
@@ -116,52 +123,45 @@ using dx
     model.fireModify(["*"])
   }
 
-  ** Group given view by column.
-  override Void group(Str gcol, Str? scol := null)
+  ** Return group names from the last `group` call, or emtpy
+  ** list of this view has not been grouped.
+  override Str[] groups() { gnames }
+
+  ** Group this view by given groups, where the function is
+  ** used to map each record into a specific group.
+  override Void group(Str[] groups, |DxRec->Str| f)
   {
-    // TODO FIXIT: this is just sort(gcol, scol); how to make DRY
+    // set groups
+    this.gnames = groups.dup.ro
 
-    gmap := [:]
-    rindex.sort |ida, idb|
+    // map rec indexes to groups
+    gmap := Str:Int[][:] { it.ordered=true }
+    model.store.each(bucket) |r|
     {
-      // get recs
-      ra := this.get(ida)
-      rb := this.get(idb)
-
-      // sort group col
-      ga := ra.get(gcol)
-      gb := rb.get(gcol)
-      gr := RxUtil.sort(ga, gb)
-
-      // if pa == pb then secondary sort
-      if (gr == 0 && scol != null)
-      {
-        sa := ra.get(scol)
-        sb := rb.get(scol)
-        return RxUtil.sort(sa, sb)
-      }
-
-      gmap[ga] = ga
-      gmap[gb] = gb
-
-      return gr
+      g := f(r)
+      a := gmap[g] ?: Int[,]
+      a.add(r.id)
+      gmap[g] = a
     }
 
-    // set grroup names
-    gkeys.clear
-    gkeys.addAll(gmap.keys).sort
+    // rebuild index and inline groups; where groups
+    // are represented with negative indexes into the
+    // gnames list
+    rindex = List.make(Int#, model.store.size(bucket) + gnames.size)
+    gmap.keys.each |g,gi|
+    {
+      // add group index
+      rindex.add(gi.negate-1)
 
-    // // reverse sort if needed
-    // if (dir == "down") index = index.reverse
+      // add group recs
+      rindex.addAll(gmap[g])
+    }
 
     // notify
 // TODO FIXIT
     // model.fireModify([bucket])
     model.fireModify(["*"])
   }
-
-  ** Return group values from the last `group` call.
-  override Obj?[] groups() { gkeys }
 
   // Invoke model.fireSelect event
   private Void fireSelect() { model.fireSelect([bucket]) }
@@ -173,9 +173,6 @@ using dx
   // and cell value is the correspoding rec_id
   private Int[] rindex := [,]
 
-  // group keys
-  private Obj?[] gkeys := [,]
-
-  // selection map
-  private Int:DxRec smap := [:]
+  private Int:DxRec smap := [:]            // selection map
+  private Str[] gnames := Str#.emptyList   // group names
 }

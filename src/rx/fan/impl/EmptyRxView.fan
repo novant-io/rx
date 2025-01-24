@@ -49,9 +49,11 @@ using dx
   ** Sort given view by column and optional secondary column.
   override Void sort(Str pcol, Str? scol := null) {}
 
-  ** Group given view by column.
-  override Void group(Str gcol, Str? scol := null) {}
+  ** Return group names from the last `group` call, or emtpy
+  ** list of this view has not been grouped.
+  override Str[] groups() { Str#.emptyList }
 
-  ** Return group values from the last `group` call.
-  override Obj?[] groups() { Obj?#.emptyList }
+  ** Group this view by given groups, where the function is
+  ** used to map each record into a specific group.
+  override Void group(Str[] groups, |DxRec->Str| f) {}
 }

@@ -16,20 +16,31 @@ using dx
 ** zero or more 'RxTransform' instances may have been applied.
 @Js mixin RxView
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
   ** Convenience for `size == 0`
   abstract Bool isEmpty()
 
   ** Return number of records in current view.
   abstract Int size()
 
+// getAt?
   ** Get record at the given index from current view.
   abstract DxRec at(Int index)
 
+// getId?
   ** Get record by id from current view or 'null' if not found.
   abstract DxRec? get(Int id)
 
   ** Iterate the recs in this view.
   abstract Void each(|DxRec| f)
+
+//////////////////////////////////////////////////////////////////////////
+// Selection
+//////////////////////////////////////////////////////////////////////////
 
   ** Select or deselect the given record.
   abstract Void select(DxRec rec, Bool select := true)
@@ -46,12 +57,18 @@ using dx
   ** Get number of selected records.
   abstract Int selectionSize()
 
+//////////////////////////////////////////////////////////////////////////
+// Transforms
+//////////////////////////////////////////////////////////////////////////
+
   ** Sort given view by column and optional secondary column.
   abstract Void sort(Str pcol, Str? scol := null)
 
-  ** Group given view by column, an optioal sort by column.
-  abstract Void group(Str gcol, Str? scol := null)
+  ** Return group names from the last `group` call, or emtpy
+  ** list of this view has not been grouped.
+  abstract Str[] groups()
 
-  ** Return group values from the last `group` call.
-  abstract Obj?[] groups()
+  ** Group this view by given groups, where the function is
+  ** used to map each record into a specific group.
+  abstract Void group(Str[] groups, |DxRec->Str| f)
 }
