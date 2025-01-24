@@ -31,6 +31,9 @@ using dx
   ** Iterate the recs in this view.
   override Void each(|DxRec| f) {}
 
+  ** Return a list of unique values for this view for given col.
+  override Obj[] uniqueVals(Str col) { Obj#.emptyList }
+
   ** Select or deselect the given record.
   override Void select(DxRec rec, Bool select := true) {}
 

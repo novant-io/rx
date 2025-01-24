@@ -62,6 +62,12 @@ using dx
     verifyEq(view.getId(1)->a, 12)
     verifyEq(view.getAt(0)->a,  12)
 
+    // uniqueVals
+    verifyEq(view.uniqueVals("a").sort, Obj[12, 18, 24])
+    verifyEq(view.uniqueVals("b").sort, Obj["bar", "foo","zar"])
+    verifyEq(view.uniqueVals("c").sort, Obj[false, true])
+    verifyEq(view.uniqueVals("xxx"), Obj[,])
+
     // remove model
     rx.remove("m1")
     verifyEq(rx.size, 0)

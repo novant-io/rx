@@ -70,6 +70,18 @@ using dx
     rindex.each |id| { f(this.getId(id)) }
   }
 
+  ** Return a list of unique values for this view for given col.
+  override Obj[] uniqueVals(Str col)
+  {
+    map := Obj:Bool[:]
+    this.each |r|
+    {
+      v := r.get(col)
+      if (v != null) map[v] = true
+    }
+    return map.keys
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////
