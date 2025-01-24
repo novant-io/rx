@@ -170,14 +170,15 @@ using dx
     // gnames list
     rsize := model.store.size(bucket) + gnames.size
     rindex = List.make(Int#, rsize)
-    gmap.keys.each |g,gi|
+    gnames.each |g,gi|
     {
       // add group index
       rindex.add(gi.negate-1)
 
       // sort and add group recs
-      recs := dosort(gmap[g])
-      rindex.addAll(recs)
+      recs := gmap[g]
+      if (recs != null)
+      rindex.addAll(dosort(recs))
     }
   }
 
