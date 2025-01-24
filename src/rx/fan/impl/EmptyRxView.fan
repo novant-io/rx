@@ -50,5 +50,8 @@ using dx
   override Void sort(Str pcol, Str? scol := null) {}
 
   ** Group given view by column.
-  override Void group(Str col) {}
+  override Void group(Str gcol, Str? scol := null) {}
+
+  ** Return group values from the last `group` call.
+  override Obj?[] groups() { Obj?#.emptyList }
 }

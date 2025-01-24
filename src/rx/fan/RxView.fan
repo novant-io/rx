@@ -49,6 +49,9 @@ using dx
   ** Sort given view by column and optional secondary column.
   abstract Void sort(Str pcol, Str? scol := null)
 
-  ** Group given view by column.
-  abstract Void group(Str col)
+  ** Group given view by column, an optioal sort by column.
+  abstract Void group(Str gcol, Str? scol := null)
+
+  ** Return group values from the last `group` call.
+  abstract Obj?[] groups()
 }

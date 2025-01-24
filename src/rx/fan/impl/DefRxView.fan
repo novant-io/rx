@@ -117,10 +117,51 @@ using dx
   }
 
   ** Group given view by column.
-  override Void group(Str col)
+  override Void group(Str gcol, Str? scol := null)
   {
-    // TODO FIXIT
+    // TODO FIXIT: this is just sort(gcol, scol); how to make DRY
+
+    gmap := [:]
+    rindex.sort |ida, idb|
+    {
+      // get recs
+      ra := this.get(ida)
+      rb := this.get(idb)
+
+      // sort group col
+      ga := ra.get(gcol)
+      gb := rb.get(gcol)
+      gr := RxUtil.sort(ga, gb)
+
+      // if pa == pb then secondary sort
+      if (gr == 0 && scol != null)
+      {
+        sa := ra.get(scol)
+        sb := rb.get(scol)
+        return RxUtil.sort(sa, sb)
+      }
+
+      gmap[ga] = ga
+      gmap[gb] = gb
+
+      return gr
+    }
+
+    // set grroup names
+    gkeys.clear
+    gkeys.addAll(gmap.keys).sort
+
+    // // reverse sort if needed
+    // if (dir == "down") index = index.reverse
+
+    // notify
+// TODO FIXIT
+    // model.fireModify([bucket])
+    model.fireModify(["*"])
   }
+
+  ** Return group values from the last `group` call.
+  override Obj?[] groups() { gkeys }
 
   // Invoke model.fireSelect event
   private Void fireSelect() { model.fireSelect([bucket]) }
@@ -131,6 +172,9 @@ using dx
   // row_index where array position is view row index
   // and cell value is the correspoding rec_id
   private Int[] rindex := [,]
+
+  // group keys
+  private Obj?[] gkeys := [,]
 
   // selection map
   private Int:DxRec smap := [:]
