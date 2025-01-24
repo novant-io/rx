@@ -70,5 +70,16 @@ using dx
     verifyRec(v.at(3), ["id":4,  "name":"Barney Stinson", "state":"NY"])
     verifyRec(v.at(4), ["id":0xffff_ffff, "name":"west_coast"])
     verifyRec(v.at(5), ["id":2,  "name":"Ron Burgundy",   "state":"CA"])
+
+    // add sort
+    v.sort("name")
+    verifyViewCols(v, ["id","name","state"], [
+      ["id":0xffff_ffff, "name":"east_coast"],
+      ["id":4,  "name":"Barney Stinson", "state":"NY"],
+      ["id":1,  "name":"Jay Gatsby",     "state":"NY"],
+      ["id":3,  "name":"Mark Scout",     "state":"NJ"],
+      ["id":0xffff_ffff, "name":"west_coast"],
+      ["id":2,  "name":"Ron Burgundy",   "state":"CA"],
+    ])
   }
 }

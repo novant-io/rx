@@ -16,6 +16,11 @@ using dx
 
 @Js internal class DefRxView : RxView
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
   ** Create a new view.
   new make(RxModel model, Str bucket)
   {
@@ -26,6 +31,10 @@ using dx
     this.model.store.each(bucket) |r| { rindex.add(r.id) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
   ** Convenience for `size == 0`
   override Bool isEmpty() { this.size == 0 }
 
@@ -33,14 +42,14 @@ using dx
   override Int size() { rindex.size }
 
   ** Get record at the given index from current view.
-  override DxRec at(Int index)
+  override DxRec getAt(Int index)
   {
     id := rindex[index]
     return this.get(id)
   }
 
   ** Get record by id from current view or 'null' if not found.
-  override DxRec? get(Int id)
+  override DxRec? getId(Int id)
   {
     if (id < 0)
     {
@@ -60,6 +69,10 @@ using dx
   {
     rindex.each |id| { f(this.get(id)) }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Selection
+//////////////////////////////////////////////////////////////////////////
 
   ** Select or deselect the given record.
   override Void select(DxRec rec, Bool select := true)
@@ -89,38 +102,17 @@ using dx
   ** Get number of selected records.
   override Int selectionSize() { smap.size }
 
+//////////////////////////////////////////////////////////////////////////
+// Transforms
+//////////////////////////////////////////////////////////////////////////
+
   ** Sort given view by column and optional secondary column.
   override Void sort(Str pcol, Str? scol := null)
   {
-    rindex.sort |ida, idb|
-    {
-      // get recs
-      ra := this.get(ida)
-      rb := this.get(idb)
-
-      // sort primary col
-      pa := ra.get(pcol)
-      pb := rb.get(pcol)
-      pr := RxUtil.sort(pa, pb)
-
-      // if pa == pb then secondary sort
-      if (pr == 0 && scol != null)
-      {
-        sa := ra.get(scol)
-        sb := rb.get(scol)
-        return RxUtil.sort(sa, sb)
-      }
-
-      return pr
-    }
-
-    // // reverse sort if needed
-    // if (dir == "down") index = index.reverse
-
-    // notify
-// TODO FIXIT
-    // model.fireModify([bucket])
-    model.fireModify(["*"])
+    this.spcol = pcol
+    this.sscol = scol
+    this.updateIndex
+    this.fireNotify
   }
 
   ** Return group names from the last `group` call, or emtpy
@@ -131,14 +123,31 @@ using dx
   ** used to map each record into a specific group.
   override Void group(Str[] groups, |DxRec->Str| f)
   {
-    // set groups
     this.gnames = groups.dup.ro
+    this.gfunc  = f
+    this.updateIndex
+    this.fireNotify
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Support
+//////////////////////////////////////////////////////////////////////////
+
+  ** Update index.
+  private Void updateIndex()
+  {
+    // if no groups; do simple sort
+    if (gnames.isEmpty)
+    {
+      this.dosort(rindex)
+      return
+    }
 
     // map rec indexes to groups
     gmap := Str:Int[][:] { it.ordered=true }
     model.store.each(bucket) |r|
     {
-      g := f(r)
+      g := gfunc(r)
       a := gmap[g] ?: Int[,]
       a.add(r.id)
       gmap[g] = a
@@ -147,25 +156,67 @@ using dx
     // rebuild index and inline groups; where groups
     // are represented with negative indexes into the
     // gnames list
-    rindex = List.make(Int#, model.store.size(bucket) + gnames.size)
+    rsize := model.store.size(bucket) + gnames.size
+    rindex = List.make(Int#, rsize)
     gmap.keys.each |g,gi|
     {
       // add group index
       rindex.add(gi.negate-1)
 
-      // add group recs
-      rindex.addAll(gmap[g])
+      // sort and add group recs
+      recs := dosort(gmap[g])
+      rindex.addAll(recs)
     }
+  }
 
-    // notify
-// TODO FIXIT
+  ** Sort given index of rec ids
+  private Int[] dosort(Int[] list)
+  {
+    // short-circuit if no sort configurered
+    if (spcol == null) return list
+
+    // sort
+    return list.sort |ida, idb|
+    {
+      // get recs
+      ra := this.get(ida)
+      rb := this.get(idb)
+
+      // sort primary col
+      pa := ra.get(spcol)
+      pb := rb.get(spcol)
+      pr := RxUtil.sort(pa, pb)
+
+      // if pa == pb then secondary sort
+      if (pr == 0 && sscol != null)
+      {
+        sa := ra.get(sscol)
+        sb := rb.get(sscol)
+        return RxUtil.sort(sa, sb)
+      }
+
+      return pr
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Support
+//////////////////////////////////////////////////////////////////////////
+
+  private Void fireSelect() { model.fireSelect([bucket]) }
+
+  private Void fireNotify()
+  {
+    // TODO FIXIT
     // model.fireModify([bucket])
     model.fireModify(["*"])
   }
 
-  // Invoke model.fireSelect event
-  private Void fireSelect() { model.fireSelect([bucket]) }
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
 
+  // model
   private RxModel model
   private const Str bucket
 
@@ -173,6 +224,9 @@ using dx
   // and cell value is the correspoding rec_id
   private Int[] rindex := [,]
 
-  private Int:DxRec smap := [:]            // selection map
-  private Str[] gnames := Str#.emptyList   // group names
+  private Int:DxRec smap := [:]              // selection map
+  private Str[] gnames   := Str#.emptyList   // group: names
+  private Func? gfunc    := null             // group: func
+  private Str? spcol     := null             // sort: primary col
+  private Str? sscol     := null             // sort: secondary col
 }

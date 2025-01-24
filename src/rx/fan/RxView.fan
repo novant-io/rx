@@ -27,13 +27,14 @@ using dx
   ** Return number of records in current view.
   abstract Int size()
 
-// getAt?
-  ** Get record at the given index from current view.
-  abstract DxRec at(Int index)
+  @Deprecated DxRec at(Int index) { getAt(index) }
+  @Deprecated DxRec? get(Int id)  { getId(id) }
 
-// getId?
+  ** Get record at the given index from current view.
+  abstract DxRec getAt(Int index)
+
   ** Get record by id from current view or 'null' if not found.
-  abstract DxRec? get(Int id)
+  abstract DxRec? getId(Int id)
 
   ** Iterate the recs in this view.
   abstract Void each(|DxRec| f)
