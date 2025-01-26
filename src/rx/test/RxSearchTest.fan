@@ -50,5 +50,14 @@ using dx
     // verifyViewCols(v, ["id","name"], [
     //   ["id":4, "name":"Barney Stinson"],
     // ])
+
+    // reset and verify all results
+    v.search("")
+    verifyViewCols(v, ["id","name"], [
+      ["id":1, "name":"Jay Gatsby"],
+      ["id":2, "name":"Ron Burgundy"],
+      ["id":3, "name":"Mark Scout"],
+      ["id":4, "name":"Barney Stinson"],
+    ])
   }
 }
