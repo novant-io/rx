@@ -59,4 +59,7 @@ using dx
   ** Group this view by given groups, where the function is
   ** used to map each record into a specific group.
   override Void group(Str[] groups, |DxRec->Str| f) {}
+
+  ** Filter this view using the given string filter,
+  override Void filter(Str filter) {}
 }
