@@ -29,9 +29,25 @@ using dx
     v := m.view("b1")
 
     // search by state
-    // v.search("NY")
+    v.search("NY")
+    verifyViewCols(v, ["id","name"], [
+      ["id":1, "name":"Jay Gatsby"],
+      ["id":4, "name":"Barney Stinson"],
+    ])
+
+    // search again
+    v.search("Gatsby")
+    verifyViewCols(v, ["id","name"], [
+      ["id":1, "name":"Jay Gatsby"],
+    ])
+
+    // compound query no match
+    v.search("ron middle neck")
+    verifyEq(v.size, 0)
+
+    // // compound query match
+    // v.search("ave ny")
     // verifyViewCols(v, ["id","name"], [
-    //   ["id":1, "name":"Jay Gatsby",   ],
     //   ["id":4, "name":"Barney Stinson"],
     // ])
   }

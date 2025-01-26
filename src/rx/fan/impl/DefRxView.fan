@@ -166,6 +166,13 @@ using dx
       return
     }
 
+    // TODO FIXIT
+    if (qterms.size > 0)
+    {
+      this.rindex = this.dosearch(rindex)
+      return
+    }
+
     // if no groups; do simple sort
     if (gnames.isEmpty)
     {
@@ -201,26 +208,22 @@ using dx
   }
 
   ** Filter given index by query terms.
-  private Int[] doseach(Int[] orig)
+  private Int[] dosearch(Int[] orig)
   {
     // short-circuit if no sort configurered
     if (qterms.isEmpty) return orig
 
-    // // find matching rows from prev view
-    // index := Int[,]
-    // in.index.each |r,i|
-    // {
-    //   // get rec and reset selection state
-    //   rec := in.rec(i)
-    //   rec.sel = false
-    //   // TODO: support boolean ops?
-    //   match := terms.all |t|
-    //   {
-    //     rec.keys.any |k| { t.matches(rec.get(k).toStr.lower) }
-    //   }
-    //   if (match) index.add(r)
-    // }
-    return orig
+    // search
+    return orig.findAll |id|
+    {
+      // get rec and reset selection state
+      rec := this.getId(id)
+      // r.sel = false
+      // TODO: support boolean ops?
+      return qterms.all |t| {
+        rec._keys.any |k| { t.matches(rec.get(k).toStr.lower) }
+      }
+    }
   }
 
   ** Sort given index of rec ids
