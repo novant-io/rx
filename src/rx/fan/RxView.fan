@@ -76,6 +76,6 @@ using dx
   ** used to map each record into a specific group.
   abstract Void group(Str[] groups, |DxRec->Str| f)
 
-  ** Filter this view using the given string filter,
-  abstract Void filter(Str filter)
+  ** Filter this view using the given search query.
+  abstract Void search(Str query)
 }

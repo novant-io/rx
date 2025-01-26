@@ -26,9 +26,7 @@ using dx
   {
     this.model  = model
     this.bucket = bucket
-
-    // init rindex based on natural bucket order
-    this.model.store.each(bucket) |r| { rindex.add(r.id) }
+    this.updateIndex
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,10 +139,15 @@ using dx
     this.fireNotify
   }
 
-  ** Filter this view using the given string filter,
-  override Void filter(Str filter)
+  ** Filter this view using the given search query.
+  override Void search(Str query)
   {
-    // TODO
+    q := query.trim
+    this.qterms = q.isEmpty
+      ? Regex#.emptyList
+      : q.lower.split(' ').map |f| { Regex.glob("*${f}*") }
+    this.updateIndex
+    this.fireNotify
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -154,6 +157,15 @@ using dx
   ** Update index.
   private Void updateIndex()
   {
+    // short-circuit if no tranfroams
+    if (!hasTransform)
+    {
+      // init rindex based on natural bucket order
+      this.rindex.clear
+      this.model.store.each(bucket) |r| { rindex.add(r.id) }
+      return
+    }
+
     // if no groups; do simple sort
     if (gnames.isEmpty)
     {
@@ -188,14 +200,37 @@ using dx
     }
   }
 
-  ** Sort given index of rec ids
-  private Int[] dosort(Int[] list)
+  ** Filter given index by query terms.
+  private Int[] doseach(Int[] orig)
   {
     // short-circuit if no sort configurered
-    if (spcol == null) return list
+    if (qterms.isEmpty) return orig
+
+    // // find matching rows from prev view
+    // index := Int[,]
+    // in.index.each |r,i|
+    // {
+    //   // get rec and reset selection state
+    //   rec := in.rec(i)
+    //   rec.sel = false
+    //   // TODO: support boolean ops?
+    //   match := terms.all |t|
+    //   {
+    //     rec.keys.any |k| { t.matches(rec.get(k).toStr.lower) }
+    //   }
+    //   if (match) index.add(r)
+    // }
+    return orig
+  }
+
+  ** Sort given index of rec ids
+  private Int[] dosort(Int[] orig)
+  {
+    // short-circuit if no sort configurered
+    if (spcol == null) return orig
 
     // sort
-    return list.sort |ida, idb|
+    return orig.sort |ida, idb|
     {
       // get recs
       ra := this.getId(ida)
@@ -216,6 +251,15 @@ using dx
 
       return pr
     }
+  }
+
+  ** Return 'true' if any transforms are in effect.
+  private Bool hasTransform()
+  {
+    if (gnames.size > 0) return true
+    if (qterms.size > 0) return true
+    if (spcol != null)   return true
+    return false
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,9 +287,10 @@ using dx
   // and cell value is the correspoding rec_id
   private Int[] rindex := [,]
 
-  private Int:DxRec smap := [:]              // selection map
-  private Str[] gnames   := Str#.emptyList   // group: names
-  private Func? gfunc    := null             // group: func
-  private Str? spcol     := null             // sort: primary col
-  private Str? sscol     := null             // sort: secondary col
+  private Int:DxRec smap := [:]               // selection map
+  private Str[] gnames   := Str#.emptyList    // group: names
+  private Func? gfunc    := null              // group: func
+  private Str? spcol     := null              // sort: primary col
+  private Str? sscol     := null              // sort: secondary col
+  private Regex[] qterms := Regex#.emptyList  // search: query terms
 }

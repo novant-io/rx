@@ -60,6 +60,6 @@ using dx
   ** used to map each record into a specific group.
   override Void group(Str[] groups, |DxRec->Str| f) {}
 
-  ** Filter this view using the given string filter,
-  override Void filter(Str filter) {}
+  ** Filter this view using the given search query.
+  override Void search(Str query) {}
 }

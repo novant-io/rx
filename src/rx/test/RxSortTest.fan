@@ -35,7 +35,7 @@ using dx
     }
 
     // init rx
-    m := Rx.cur.init("ms").reload(dx)
+    m := Rx.cur.init("sort").reload(dx)
     v := m.view("b1")
 
     // default order
