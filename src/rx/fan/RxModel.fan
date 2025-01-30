@@ -42,7 +42,7 @@ using dx
   {
     this.store = store
     this.loaded = true
-    fireModify(["*"])
+    fireModifyAll
     return this
   }
 
@@ -95,24 +95,37 @@ using dx
   ** Fire 'onSelect' event on the given buckets.
   internal Void fireSelect(Str[] buckets)
   {
-    fireEvent(buckets, cbSelect)
+    event := RxEvent("select")
+    fireEvent(buckets, event, cbSelect)
   }
 
   ** Fire 'onModify' event on the given buckets.
   internal Void fireModify(Str[] buckets)
   {
-    fireEvent(buckets, cbModify)
+    event := RxEvent("modify")
+    fireEvent(buckets, event, cbModify)
+  }
+
+  ** Fire 'onModify' on '*' handlers.
+  private Void fireModifyAll()
+  {
+    fireModify(Str#.emptyList)
   }
 
   ** Fire event on given buckets and event handlers.
-  private Void fireEvent(Str[] buckets, Str:Func[] cb)
+  private Void fireEvent(Str[] buckets, RxEvent event, Str:Func[] cb)
   {
-    buckets.each |b|
+    // fire explicit buckets first
+    buckets.unique.each |b|
     {
-      event := RxEvent()
+      if (b == "*") return
       funcs := cb[b] ?: Func#.emptyList
       funcs.each |Func f| { f.call(event) }
     }
+
+    // then check for * handlers
+    funcs := cb["*"] ?: Func#.emptyList
+    funcs.each |Func f| { f.call(event) }
   }
 
 //////////////////////////////////////////////////////////////////////////

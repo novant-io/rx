@@ -15,4 +15,9 @@ using dx
 ** TODO: not sure how this works yet
 @Js class RxEvent
 {
+  ** Constructor.
+  new make(Str op) { this.op = op }
+
+  ** Operation that fired this event.
+  const Str op
 }

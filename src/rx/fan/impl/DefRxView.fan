@@ -273,9 +273,7 @@ using dx
 
   private Void fireNotify()
   {
-    // TODO FIXIT
-    // model.fireModify([bucket])
-    model.fireModify(["*"])
+    model.fireModify([bucket])
   }
 
 //////////////////////////////////////////////////////////////////////////
