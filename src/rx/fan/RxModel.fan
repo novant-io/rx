@@ -106,10 +106,10 @@ using dx
     fireEvent(buckets, event, cbModify)
   }
 
-  ** Fire 'onModify' on '*' handlers.
-  private Void fireModifyAll()
+  ** Fire 'onModify' on all buckets.
+  internal Void fireModifyAll()
   {
-    fireModify(Str#.emptyList)
+    fireModify(store.buckets)
   }
 
   ** Fire event on given buckets and event handlers.

@@ -65,8 +65,8 @@ using dx
     b := 0
     c := 0
 
-    // init rx
-    m := Rx.cur.init("sort").reload(DxStore(1, [
+    // create dx
+    dx := DxStore(1, [
       "a":[
         DxRec(["id":1, "name":"Gamma"]),
         DxRec(["id":2, "name":"Alpha"]),
@@ -82,7 +82,10 @@ using dx
         DxRec(["id":2, "name":"Eta"]),
         DxRec(["id":3, "name":"Iota"]),
       ],
-    ]))
+    ])
+
+    // init rx
+    m := Rx.cur.init("sort").reload(dx)
 
     // register event handlers
     m.onModify("*") { x++ }
@@ -121,5 +124,12 @@ using dx
     verifyEq(a, 1)
     verifyEq(b, 4)
     verifyEq(c, 1)
+
+    // reload should fire inc 4 counters
+    m.reload(dx)
+    verifyEq(x, 7)
+    verifyEq(a, 2)
+    verifyEq(b, 5)
+    verifyEq(c, 2)
   }
 }
