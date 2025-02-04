@@ -116,6 +116,12 @@ using dx
 // Transforms
 //////////////////////////////////////////////////////////////////////////
 
+  ** Callback to refresh view state.
+  override Void refresh()
+  {
+    this.updateIndex
+  }
+
   ** Sort given view by column and optional secondary column.
   override Void sort(Str pcol, Str? scol := null)
   {

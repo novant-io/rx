@@ -65,6 +65,9 @@ using dx
 // Transforms
 //////////////////////////////////////////////////////////////////////////
 
+  ** Callback to refresh view state.
+  abstract Void refresh()
+
   ** Sort given view by column and optional secondary column.
   abstract Void sort(Str pcol, Str? scol := null)
 

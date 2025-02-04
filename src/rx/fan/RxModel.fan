@@ -42,6 +42,7 @@ using dx
   {
     this.store = store
     this.loaded = true
+    vmap.each |v| { v.refresh }
     fireModifyAll
     return this
   }

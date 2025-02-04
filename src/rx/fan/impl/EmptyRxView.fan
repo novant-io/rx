@@ -49,6 +49,9 @@ using dx
   ** Get number of selected records.
   override const Int selectionSize := 0
 
+  ** Callback to refresh view state.
+  override Void refresh() {}
+
   ** Sort given view by column and optional secondary column.
   override Void sort(Str pcol, Str? scol := null) {}
 
