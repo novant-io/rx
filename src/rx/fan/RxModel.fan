@@ -47,6 +47,14 @@ using dx
     return this
   }
 
+  ** Force refresh all views.
+  This refresh()
+  {
+    vmap.each |v| { v.refresh }
+    fireModifyAll
+    return this
+  }
+
   ** Bucket keys for backing store of this Rx instance.
   Str[] buckets() { store.buckets }
 
