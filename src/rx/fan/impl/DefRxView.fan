@@ -163,16 +163,14 @@ using dx
   ** Update index.
   private Void updateIndex()
   {
-    // short-circuit if no tranfroams
-    if (!hasTransform)
-    {
-      // init rindex based on natural bucket order
-      this.rindex.clear
-      this.model.store.each(bucket) |r| { rindex.add(r.id) }
-      return
-    }
+    // init rindex based on natural bucket order
+    this.rindex.clear
+    this.model.store.each(bucket) |r| { rindex.add(r.id) }
 
-    // TODO FIXIT
+    // short-circuit if no tranforms
+    if (!hasTransform) return
+
+    // apply search
     if (qterms.size > 0)
     {
       this.rindex = this.dosearch(rindex)
