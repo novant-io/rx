@@ -39,6 +39,9 @@ using dx
   ** Return number of records in current view.
   override Int size() { rindex.size }
 
+  ** Get union of all keys in this view.
+  override Str[] keys() { model.store.keys(bucket) }
+
   ** Get record at the given index from current view.
   override DxRec getAt(Int index)
   {

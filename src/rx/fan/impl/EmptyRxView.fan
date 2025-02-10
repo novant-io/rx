@@ -22,6 +22,9 @@ using dx
   ** Return number of records in current view.
   override const Int size := 0
 
+  ** Get union of all keys in this view.
+  override const Str[] keys := Str#.emptyList
+
   ** Get record at the given index from current view.
   override DxRec getAt(Int index) { throw IndexErr("Index not found '${index}'") }
 

@@ -27,6 +27,9 @@ using dx
   ** Return number of records in current view.
   abstract Int size()
 
+  ** Get union of all keys in this view.
+  abstract Str[] keys()
+
   @Deprecated DxRec at(Int index) { getAt(index) }
   @Deprecated DxRec? get(Int id)  { getId(id) }
 

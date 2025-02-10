@@ -59,6 +59,7 @@ using dx
     view := m.view("foo")
     verifyEq(view.isEmpty, false)
     verifyEq(view.size, 3)
+    verifyEq(view.keys.rw.sort, ["a", "b", "c", "id"])
     verifyEq(view.getId(1)->a, 12)
     verifyEq(view.getAt(0)->a,  12)
 
