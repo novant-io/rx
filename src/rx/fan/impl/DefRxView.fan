@@ -125,11 +125,13 @@ using dx
     this.updateIndex
   }
 
-  ** Sort given view by column and optional secondary column.
-  override Void sort(Str pcol, Str? scol := null)
+  ** Sort given view by column and optional secondary column,
+  ** where 'order' indicates sort order (0=natural; 1=reverse).
+  override Void sort(Str pcol, Str? scol := null, Int order := 0)
   {
-    this.spcol = pcol
-    this.sscol = scol
+    this.spcol  = pcol
+    this.sscol  = scol
+    this.sorder = order
     this.updateIndex
     this.fireNotify
   }
@@ -239,8 +241,8 @@ using dx
     // short-circuit if no sort configurered
     if (spcol == null) return orig
 
-    // sort
-    return orig.sort |ida, idb|
+    // sort func
+    f := |ida, idb->Int|
     {
       // get recs
       ra := this.getId(ida)
@@ -261,6 +263,8 @@ using dx
 
       return pr
     }
+
+    return sorder == 0 ? orig.sort(f) : orig.sortr(f)
   }
 
   ** Return 'true' if any transforms are in effect.
@@ -300,5 +304,6 @@ using dx
   private Func? gfunc    := null              // group: func
   private Str? spcol     := null              // sort: primary col
   private Str? sscol     := null              // sort: secondary col
+  private Int? sorder    := null              // sort: order
   private Regex[] qterms := Regex#.emptyList  // search: query terms
 }

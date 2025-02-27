@@ -49,6 +49,14 @@ using dx
       ["id":3, "name":"Jay Gatsby"],
       ["id":1, "name":"Ron Burgundy"],
     ])
+
+    // reverse sort
+    v.sort("name", null, -1)
+    verifyViewCols(v, ["id","name"], [
+      ["id":1, "name":"Ron Burgundy"],
+      ["id":3, "name":"Jay Gatsby"],
+      ["id":2, "name":"Barney Stinson"],
+    ])
   }
 
 //////////////////////////////////////////////////////////////////////////

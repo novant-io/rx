@@ -55,8 +55,9 @@ using dx
   ** Callback to refresh view state.
   override Void refresh() {}
 
-  ** Sort given view by column and optional secondary column.
-  override Void sort(Str pcol, Str? scol := null) {}
+  ** Sort given view by column and optional secondary column,
+  ** where 'order' indicates sort order (0=natural; 1=reverse).
+  override Void sort(Str pcol, Str? scol := null, Int order := 0) {}
 
   ** Return group names from the last `group` call, or emtpy
   ** list of this view has not been grouped.
