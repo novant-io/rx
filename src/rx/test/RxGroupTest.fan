@@ -179,4 +179,57 @@ using dx
       ["id":4,  "name":"Barney Stinson", "state":"NY"],
     ])
   }
+
+  Void testGroupAdd()
+  {
+    // gen data
+    dx := DxStore(1, ["b1":[
+      DxRec(["id":1, "name":"Jay Gatsby",     "state":"NY"]),
+      DxRec(["id":2, "name":"Ron Burgundy",   "state":"CA"]),
+      DxRec(["id":3, "name":"Mark Scout",     "state":"NJ"]),
+      DxRec(["id":4, "name":"Barney Stinson", "state":"NY"]),
+    ]])
+
+    // init rx and group
+    m := Rx.cur.init("mg4").reload(dx)
+    v := m.view("b1")
+    v.group(["east_coast", "west_coast"]) |r|
+    {
+      switch (r->state)
+      {
+        case "CA": return "west_coast"
+        case "NJ": return "east_coast"
+        case "NY": return "east_coast"
+        default:   throw ArgErr()
+      }
+    }
+
+    // verify each
+    verifyEq(v.groups, ["east_coast", "west_coast"])
+    verifyEq(v.size, 6)
+    verifyViewCols(v, ["id","name","state"], [
+      ["id":0xffff_ffff, "name":"east_coast"],
+      ["id":1,  "name":"Jay Gatsby",     "state":"NY"],
+      ["id":3,  "name":"Mark Scout",     "state":"NJ"],
+      ["id":4,  "name":"Barney Stinson", "state":"NY"],
+      ["id":0xffff_ffff, "name":"west_coast"],
+      ["id":2,  "name":"Ron Burgundy",   "state":"CA"],
+    ])
+
+    // add a new record
+    w := DxWriter(dx)
+    w.add("b1", ["id":5, "name":"Jay Leno", "state":"CA"])
+    m.reload(w.commit)
+
+    // add sort
+    verifyViewCols(v, ["id","name","state"], [
+      ["id":0xffff_ffff, "name":"east_coast"],
+      ["id":1,  "name":"Jay Gatsby",     "state":"NY"],
+      ["id":3,  "name":"Mark Scout",     "state":"NJ"],
+      ["id":4,  "name":"Barney Stinson", "state":"NY"],
+      ["id":0xffff_ffff, "name":"west_coast"],
+      ["id":2,  "name":"Ron Burgundy",   "state":"CA"],
+      ["id":5,  "name":"Jay Leno",       "state":"CA"],
+    ])
+  }
 }
