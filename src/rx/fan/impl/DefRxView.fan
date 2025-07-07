@@ -98,7 +98,12 @@ using dx
   ** Select or deselect all records in view.
   override Void selectAll(Bool select := true)
   {
-    if (select) each |r| { smap[r.id] = r }
+    if (select) each |r| {
+      // TODO: how do make this DRY?
+      // TODO: should 'each' [optionally?] exclude groups?
+      // never select a group
+      if (r.id != 0xffff_ffff) smap[r.id] = r
+    }
     else smap.clear
     fireSelect
   }
