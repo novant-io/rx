@@ -21,6 +21,9 @@ using dx
 // Access
 //////////////////////////////////////////////////////////////////////////
 
+  ** Bucket name for this view.
+  abstract Str bucket()
+
   ** Convenience for `size == 0`
   abstract Bool isEmpty()
 

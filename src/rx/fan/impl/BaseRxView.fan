@@ -1,40 +1,41 @@
 //
-// Copyright (c) 2024, Novant LLC
+// Copyright (c) 2025, Novant LLC
 // Licensed under the MIT License
 //
 // History:
-//   30 Jul 2024  Andy Frank  Creation
+//   16 Aug 2025  Andy Frank  Creation
 //
 
 using dx
 
 *************************************************************************
-** RxView
+** BaseRxView
 *************************************************************************
 
-// TODO: for now just pass bucket through
-
-@Js internal class DefRxView : RxView
+@Js internal abstract class BaseRxView : RxView
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  ** Create a new view.
-  new make(RxModel model, Str bucket)
+  ** Constructor.
+  new make(RxModel model)
   {
-    this.model  = model
-    this.bucket = bucket
-    this.updateIndex
+    this.model = model
   }
+
+  abstract Str[] doKeys()
+
+  abstract DxRec? doGet(Int id)
+
+  abstract Void doEach(|DxRec| f)
+
+  abstract Int doSize()
 
 //////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////
-
-  ** Bucket name for this view.
-  override const Str bucket
 
   ** Convenience for `size == 0`
   override Bool isEmpty() { this.size == 0 }
@@ -43,7 +44,7 @@ using dx
   override Int size() { rindex.size }
 
   ** Get union of all keys in this view.
-  override Str[] keys() { model.store.keys(bucket) }
+  override Str[] keys() { doKeys }
 
   ** Get record at the given index from current view.
   override DxRec getAt(Int index)
@@ -64,7 +65,7 @@ using dx
     }
     else
     {
-      return model.store.get(bucket, id)
+      return doGet(id)
     }
   }
 
@@ -174,11 +175,11 @@ using dx
 //////////////////////////////////////////////////////////////////////////
 
   ** Update index.
-  private Void updateIndex()
+  protected Void updateIndex()
   {
     // init rindex based on natural bucket order
     this.rindex.clear
-    this.model.store.each(bucket) |r| { rindex.add(r.id) }
+    doEach |r| { rindex.add(r.id) }
 
     // short-circuit if no tranforms
     if (!hasTransform) return
@@ -199,7 +200,7 @@ using dx
 
     // map rec indexes to groups
     gmap := Str:Int[][:] { it.ordered=true }
-    model.store.each(bucket) |r|
+    doEach |r|
     {
       g := gfunc(r)
       a := gmap[g] ?: Int[,]
@@ -210,7 +211,7 @@ using dx
     // rebuild index and inline groups; where groups
     // are represented with negative indexes into the
     // gnames list
-    rsize := model.store.size(bucket) + gnames.size
+    rsize := doSize + gnames.size
     rindex = List.make(Int#, rsize)
     gnames.each |g,gi|
     {
@@ -300,7 +301,7 @@ using dx
 //////////////////////////////////////////////////////////////////////////
 
   // model
-  private RxModel model
+  protected RxModel model
 
   // row_index where array position is view row index
   // and cell value is the correspoding rec_id

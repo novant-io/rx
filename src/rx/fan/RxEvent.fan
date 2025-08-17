@@ -16,8 +16,15 @@ using dx
 @Js class RxEvent
 {
   ** Constructor.
-  new make(Str op) { this.op = op }
+  new make(Str op, |This|? f := null)
+  {
+    this.op = op
+    if (f != null) f(this)
+  }
 
   ** Operation that fired this event.
   const Str op
+
+  ** Bucket for this event.
+  const Str? bucket
 }

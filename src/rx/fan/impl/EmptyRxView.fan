@@ -16,6 +16,9 @@ using dx
 {
   static const EmptyRxView defVal := EmptyRxView()
 
+  ** Empty string for bucket name.
+  override const Str bucket := ""
+
   ** Convenience for `size == 0`
   override const Bool isEmpty := true
 

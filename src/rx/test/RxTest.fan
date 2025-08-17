@@ -76,4 +76,32 @@ using dx
     verifyEq(rx.model("m1", false), null)
     verifyErr(ArgErr#) { x := rx.model("m1") }
   }
+
+  Void testVirtView()
+  {
+    // force clear
+    Rx.cur.clear
+
+    // init model
+    rx := Rx.cur
+    m := rx.init("m1").reload(DxStore(1, ["foo":[
+      DxRec(["id":1, "a":12, "b":"foo", "c":false]),
+      DxRec(["id":2, "a":24, "b":"bar", "c":true]),
+      DxRec(["id":3, "a":18, "b":"zar", "c":false]),
+    ]]))
+
+    // add empty
+    verifyTrue(m.view("va", false) is EmptyRxView)
+    m.addVirtualView("va", [,])
+    verifyTrue(m.view("va") is VirtRxView)
+    verifyEq(m.view("va").size, 0)
+
+    // add records
+    m.addVirtualView("vb", [
+      DxRec(["id":1, "v":2]),
+      DxRec(["id":2, "v":4]),
+      DxRec(["id":3, "v":6]),
+    ])
+    verifyEq(m.view("vb").size, 3)
+  }
 }

@@ -68,6 +68,9 @@ using dx
     {
       if (!buckets.contains(bucket))
       {
+        // first fire onView to see if bucket created
+        fireView(bucket)
+
         // NOTE: we do not cache the empty rx instance
         if (checked) throw ArgErr("Bucket not found '${bucket}'")
         return EmptyRxView.defVal
@@ -77,9 +80,53 @@ using dx
     return view
   }
 
+  **
+  ** Create a new virtual view that is not backed by the underlying
+  ** `DxStore`. Virtual views can be used to expose computed or
+  ** transient records alongside store-backed data. They behave like
+  ** normal views for selection and modification events, but their
+  ** content is managed entirely by the caller.
+  **
+  ** Throws 'Err' if view already exists for this name.
+  **
+  RxView addVirtualView(Str bucket, DxRec[] recs)
+  {
+    // sanity check
+    if (vmap.containsKey(bucket)) throw ArgErr("View already exists: $bucket")
+
+    // // create view
+    view := VirtRxView(this, bucket, recs)
+    vmap[bucket] = view
+    view.refresh
+    return view
+  }
+
+  ** Replace the contents of an existing virtual view with a new one.
+  ** The previous view instance is discarded and the given `bucket`
+  ** is reinitialized with the new data.  If no view already exists,
+  ** a new view is added.
+  RxView replaceVirtualView(Str bucket, DxRec[] recs)
+  {
+    // sanity check we can only remove virtual views
+    view := vmap.remove(bucket)
+    if (view != null)
+    {
+      if (view is VirtRxView) vmap.remove(bucket)
+      else throw ArgErr("Cannot replace a non-virtual view: $bucket")
+    }
+
+    // add new view
+    return addVirtualView(bucket, recs)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////
+
+  ** Register a callback when the given bucket is requested
+  ** from `view` but does not yet exist, which can be used
+  ** to create views on-demand.
+  Void onView(|RxEvent| f) { cbView = f }
 
   ** Register a callback when the given bucket selection is
   ** modified. Use '"*"' to register callback when _any_
@@ -99,6 +146,13 @@ using dx
     acc := cbModify[bucket] ?: Func[,]
     acc.add(f)
     cbModify[bucket] = acc
+  }
+
+  ** Fire 'onView' event for given bucket.
+  private Void fireView(Str bucket)
+  {
+    event := RxEvent("view") { it.bucket=bucket }
+    cbView?.call(event)
   }
 
   ** Fire 'onSelect' event on the given buckets.
@@ -142,6 +196,7 @@ using dx
 //////////////////////////////////////////////////////////////////////////
 
   private Str:RxView vmap := [:]      // map of bucket:RxView
+  private Func? cbView                // on_view callback
   private Str:Func[] cbSelect := [:]  // map of bucket : event callbacks
   private Str:Func[] cbModify := [:]  // map of bucket : event callbacks
 }
