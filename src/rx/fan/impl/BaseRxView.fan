@@ -131,7 +131,12 @@ using dx
   ** Callback to refresh view state.
   override Void refresh()
   {
-    this.updateIndex
+   // update our view index
+   this.updateIndex
+
+   // our selection is cached with instances; so make
+   // sure we update to the lastest copy
+   smap.keys.each |id| { smap[id] = getId(id) }
   }
 
   ** Sort given view by column and optional secondary column,

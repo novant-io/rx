@@ -113,4 +113,28 @@ using dx
     verifyEq(v.selectionSize,  0)
     verifyEq(v.selection.size, 0)
   }
+
+  Void testUpdate()
+  {
+    // test that a modified record gets updated in the selection
+
+    // init rx
+    m := Rx.cur.init("m2").reload(DxStore(1, ["b1":[
+      DxRec(["id":1, "a":"foo", "b":12]),
+      DxRec(["id":2, "a":"bar", "b":33]),
+      DxRec(["id":3, "a":"zar", "b":10]),
+      DxRec(["id":4, "a":"car", "b":18]),
+      DxRec(["id":5, "a":"lar", "b":28]),
+    ]]))
+
+    // select
+    v := m.view("b1")
+    v.select(v.getId(1))
+    verifyRec(v.selection[0], ["id":1, "a":"foo", "b":12])
+
+    // update record
+    m.reload(DxWriter(m.store).update("b1", 1, ["a":"xxx"]).commit)
+    verifyRec(m.store.get("b1", 1), ["id":1, "a":"xxx", "b":12])
+    verifyRec(v.selection[0],       ["id":1, "a":"xxx", "b":12])
+  }
 }
