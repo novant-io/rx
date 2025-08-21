@@ -134,8 +134,14 @@ using dx
     this.updateIndex
 
     // our selection is cached with instances; so make
-    // sure we update to the lastest copy
-    smap.keys.each |id| { smap[id] = getId(id) }
+    // sure we update to the lastest copy; and make sure
+    // to cleanup any deleted recs
+    smap.keys.each |id|
+    {
+      rec := getId(id)
+      if (rec == null) smap.remove(id)
+      else smap[id] = rec
+    }
   }
 
   ** Sort given view by column and optional secondary column,
