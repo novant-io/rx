@@ -62,6 +62,9 @@ using dx
   ** where 'order' indicates sort order (0=natural; 1=reverse).
   override Void sort(Str pcol, Str? scol := null, Int order := 0) {}
 
+  ** Sort given view by given function.
+  override Void sortFunc(|DxRec,DxRec->Int| func) {}
+
   ** Return group names from the last `group` call, or emtpy
   ** list of this view has not been grouped.
   override Str[] groups() { Str#.emptyList }

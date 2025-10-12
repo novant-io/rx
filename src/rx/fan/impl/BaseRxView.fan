@@ -156,6 +156,14 @@ using dx
     this.fireNotify
   }
 
+  ** Sort given view by given function.
+  override Void sortFunc(|DxRec,DxRec->Int| func)
+  {
+    this.sfunc = func
+    this.updateIndex
+    this.fireNotify
+  }
+
   ** Return group names from the last `group` call, or emtpy
   ** list of this view has not been grouped.
   override Str[] groups() { gnames }
@@ -259,7 +267,22 @@ using dx
   private Int[] dosort(Int[] orig)
   {
     // short-circuit if no sort configurered
-    if (spcol == null) return orig
+    if (spcol == null && sfunc == null) return orig
+
+    // sort func
+    if (sfunc != null)
+    {
+      f := |ida, idb->Int|
+      {
+        // get recs
+        ra := this.getId(ida)
+        rb := this.getId(idb)
+
+        // yield sfunc
+        return this.sfunc(ra, rb)
+      }
+      return orig.sort(f)
+    }
 
     // sort func
     f := |ida, idb->Int|
@@ -293,6 +316,7 @@ using dx
     if (gnames.size > 0) return true
     if (qterms.size > 0) return true
     if (spcol != null)   return true
+    if (sfunc != null)   return true
     return false
   }
 
@@ -323,6 +347,7 @@ using dx
   private Func? gfunc    := null              // group: func
   private Str? spcol     := null              // sort: primary col
   private Str? sscol     := null              // sort: secondary col
+  private Func? sfunc    := null              // sort: func
   private Int? sorder    := null              // sort: order
   private Regex[] qterms := Regex#.emptyList  // search: query terms
 }

@@ -48,6 +48,14 @@ using dx
   ** Return a list of unique values for this view for given col.
   abstract Obj[] uniqueVals(Str col)
 
+  ** Return view contents as a separate DxRec list.
+  virtual DxRec[] toList()
+  {
+    acc := DxRec[,]
+    each |r| { acc.add(r) }
+    return acc
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////
@@ -77,6 +85,9 @@ using dx
   ** Sort given view by column and optional secondary column,
   ** where 'order' indicates sort order (0=natural; 1=reverse).
   abstract Void sort(Str pcol, Str? scol := null, Int order := 0)
+
+  ** Sort given view by given function.
+  abstract Void sortFunc(|DxRec,DxRec->Int| func)
 
   ** Return group names from the last `group` call, or emtpy
   ** list of this view has not been grouped.
