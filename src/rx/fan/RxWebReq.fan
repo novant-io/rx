@@ -69,7 +69,7 @@ using util
   private Func? cbOk
 
   ** Callback when req completes successfully with text response data if available.
-  This onOkText(|Str:Obj?| f) { this.cbOkText = f; return this }
+  This onOkText(|Str| f) { this.cbOkText = f; return this }
   private Func? cbOkText
 
   ** Callback when req completes successfully with Json response data if available.
