@@ -68,6 +68,10 @@ using util
   This onOk(|Str| f) { this.cbOk = f; return this }
   private Func? cbOk
 
+  ** Callback when req completes successfully with text response data if available.
+  This onOkText(|Str:Obj?| f) { this.cbOkText = f; return this }
+  private Func? cbOkText
+
   ** Callback when req completes successfully with Json response data if available.
   This onOkJson(|Str:Obj?| f) { this.cbOkJson = f; return this }
   private Func? cbOkJson
@@ -83,6 +87,9 @@ using util
     {
       // short-circuit if we get back a non-200
       if (res.status != 200) throw IOErr("Error status code: ${res.status}")
+
+      // short-circuit if text requested
+      if (cbOkText != null) return cbOkText(res.content)
 
       // short-circuit if JSON requested
       if (cbOkJson != null)
