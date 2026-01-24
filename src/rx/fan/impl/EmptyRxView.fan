@@ -29,7 +29,11 @@ using dx
   override const Str[] keys := Str#.emptyList
 
   ** Get record at the given index from current view.
-  override DxRec getAt(Int index) { throw IndexErr("Index not found '${index}'") }
+  override DxRec? getAt(Int index, Bool checked := true)
+  {
+    if (checked) throw IndexErr("Index not found '${index}'")
+    return null
+  }
 
   ** Get record by id from current view or 'null' if not found.
   override DxRec? getId(Int id) { null }

@@ -36,8 +36,9 @@ using dx
   @Deprecated DxRec at(Int index) { getAt(index) }
   @Deprecated DxRec? get(Int id)  { getId(id) }
 
-  ** Get record at the given index from current view.
-  abstract DxRec getAt(Int index)
+  ** Get record at the given index from current view, or throws
+  ** 'IndexErr' if index is out of bounds.
+  abstract DxRec? getAt(Int index, Bool checked := true)
 
   ** Get record by id from current view or 'null' if not found.
   abstract DxRec? getId(Int id)

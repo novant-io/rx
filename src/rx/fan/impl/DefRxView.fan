@@ -46,10 +46,18 @@ using dx
   override Str[] keys() { model.store.keys(bucket) }
 
   ** Get record at the given index from current view.
-  override DxRec getAt(Int index)
+  override DxRec? getAt(Int index, Bool checked := true)
   {
-    id := rindex[index]
-    return this.getId(id)
+    if (index < 0 || index >= size)
+    {
+      if (checked) throw IndexErr("Index out of range: $index")
+      return null
+    }
+    else
+    {
+      id := rindex[index]
+      return this.getId(id)
+    }
   }
 
   ** Get record by id from current view or 'null' if not found.

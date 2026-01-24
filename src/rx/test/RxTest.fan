@@ -63,6 +63,15 @@ using dx
     verifyEq(view.getId(1)->a, 12)
     verifyEq(view.getAt(0)->a,  12)
 
+    // getAt
+    verifyErr(IndexErr#) { x := view.getAt(-1) }
+    verifyEq(view.getAt(-1, false), null)
+    verifyEq(view.getAt(0).id, 1)
+    verifyEq(view.getAt(1).id, 2)
+    verifyEq(view.getAt(2).id, 3)
+    verifyErr(IndexErr#) { x := view.getAt(4) }
+    verifyEq(view.getAt(4, false), null)
+
     // uniqueVals
     verifyEq(view.uniqueVals("a").sort, Obj[12, 18, 24])
     verifyEq(view.uniqueVals("b").sort, Obj["bar", "foo","zar"])
