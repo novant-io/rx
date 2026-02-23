@@ -156,6 +156,9 @@ using dx
   ** where 'order' indicates sort order (0=natural; 1=reverse).
   override Void sort(Str pcol, Str? scol := null, Int order := 0)
   {
+    // clear custom sort
+    this.sfunc  = null
+
     this.spcol  = pcol
     this.sscol  = scol
     this.sorder = order
@@ -166,6 +169,11 @@ using dx
   ** Sort given view by given function.
   override Void sortFunc(|DxRec,DxRec->Int| func)
   {
+    // clear column sort
+    this.spcol  = null
+    this.sscol  = null
+    this.sorder = null
+
     this.sfunc = func
     this.updateIndex
     this.fireNotify
