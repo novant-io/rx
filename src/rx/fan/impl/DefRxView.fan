@@ -82,6 +82,13 @@ using dx
     rindex.each |id| { f(this.getId(id)) }
   }
 
+  ** Return the first rec in the list for which 'f' returns
+  ** 'true', or 'null' if 'f' returns 'false for every rec.
+  override DxRec? find(|DxRec->Bool| f)
+  {
+    model.store.find(bucket, f)
+  }
+
   ** Return a list of unique values for this view for given col.
   override Obj[] uniqueVals(Str col)
   {

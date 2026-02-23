@@ -46,6 +46,10 @@ using dx
   ** Iterate the recs in this view.
   abstract Void each(|DxRec| f)
 
+  ** Return the first rec in the list for which 'f' returns
+  ** 'true', or 'null' if 'f' returns 'false for every rec.
+  abstract DxRec? find(|DxRec->Bool| f)
+
   ** Return a list of unique values for this view for given col.
   abstract Obj[] uniqueVals(Str col)
 

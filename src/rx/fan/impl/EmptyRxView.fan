@@ -41,6 +41,10 @@ using dx
   ** Iterate the recs in this view.
   override Void each(|DxRec| f) {}
 
+  ** Return the first rec in the list for which 'f' returns
+  ** 'true', or 'null' if 'f' returns 'false for every rec.
+  override DxRec? find(|DxRec->Bool| f) { null }
+
   ** Return a list of unique values for this view for given col.
   override Obj[] uniqueVals(Str col) { Obj#.emptyList }
 
