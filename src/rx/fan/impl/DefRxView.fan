@@ -225,34 +225,31 @@ using dx
     // short-circuit if no tranforms
     if (!hasTransform) return
 
-    // apply search
-    if (qterms.size > 0)
-    {
-      this.rindex = this.dosearch(rindex)
-      return
-    }
+    // apply search filter first; the sort and group
+    // transforms are then applied to the filtered results
+    if (qterms.size > 0) this.rindex = this.dosearch(rindex)
 
     // if no groups; do simple sort
     if (gnames.isEmpty)
     {
-      this.dosort(rindex)
+      this.rindex = this.dosort(rindex)
       return
     }
 
     // map rec indexes to groups
     gmap := Str:Int[][:] { it.ordered=true }
-    model.store.each(bucket) |r|
+    rindex.each |id|
     {
-      g := gfunc(r)
+      g := gfunc(this.getId(id))
       a := gmap[g] ?: Int[,]
-      a.add(r.id)
+      a.add(id)
       gmap[g] = a
     }
 
     // rebuild index and inline groups; where groups
     // are represented with negative indexes into the
     // gnames list
-    rsize := model.store.size(bucket) + gnames.size
+    rsize := rindex.size + gnames.size
     rindex = List.make(Int#, rsize)
     gnames.each |g,gi|
     {
